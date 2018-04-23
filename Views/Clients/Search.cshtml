@@ -1,0 +1,51 @@
+@model IEnumerable<ClientSearchResult>
+    
+<section>
+    <div class="row ">
+        <div class="container">
+            <h1>Realizar Pesquisa</h1>
+            <hr class="shortHr">
+            <form asp-action="Search" asp-controller="Clients" method="get" class="row mt-5" >
+                <div class="col-md-8">
+                    <input type="text" id="searchInput" class="form-control" name="q" placeholder="Pesquisar..." />
+                </div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <button type="submit" id="searchBtn" class="btn btn-default">Pesquisar</button>
+                    </div>
+                </div>
+            </form>
+            
+
+            <h2>Resultados</h2>
+            <hr class="shortHr">
+            @if(Model.Any()) 
+            {
+                @foreach(var client in Model) 
+                {
+                    <div class="panel panel-default">
+                        <div class="panel-heading">@client.Name</div>
+                        <div class="panel-body">
+                            <p>Observação: @client.Note</p>
+                        </div>
+                        <ul class="list-group">
+                            <li class="list-group-item">Cpf/Cnpj: @client.DocumentNumber</li>
+                            <li class="list-group-item">Número do Contrato: @client.ContractNumber</li>
+                            <li class="list-group-item">
+                                <a href="" class="btn btn-large btn-default card-link">Dar Baixa</a>
+                                <a href="" class="btn btn-large btn-default card-link">Ver Mais</a>
+                            </li>
+                        </ul>
+                    </div>
+                }
+            } 
+            else 
+            {
+                <div class="col-md-12 alert alert-info">
+                    <p>Não há resultados para a sua busca.</p>
+                </div>   
+            }
+            
+            
+        </div>
+    </section>

@@ -1,0 +1,17 @@
+<!-- O Model é uma lista de objetos do tipo web.ViewComponents.MainMenu.MenuItem -->
+@using web.ViewComponents
+@model IEnumerable<MainMenu.MenuItem> 
+<aside class="col-lg-4">
+  <ul>
+    @foreach(MainMenu.MenuItem menuItem in Model) {
+      <li class="sizeOfList btn btn-default">
+        <a href="@menuItem.Url">@menuItem.Title</a>
+      </li>
+    }
+    <!-- <li class="sizeOfList btn btn-default"><a href="">Realizar Pesquisa</a></li>
+    <li class="sizeOfList btn btn-default"><a href="">Realizar Cotação</a></li>
+    <li class="sizeOfList btn btn-default"><a href="">Realizar Agendamento</a></li>
+    <li class="sizeOfList btn btn-default"><a href="">Planos</a></li>
+    <li class="sizeOfList btn btn-default"><a href="">Financeiro</a></li> -->
+  </ul> 
+</aside>
