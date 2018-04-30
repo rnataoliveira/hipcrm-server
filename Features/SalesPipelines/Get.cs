@@ -1,33 +1,42 @@
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using MediatR;
+using server.Models;
+using server.Data;
+using server.Shared;
+using Microsoft.EntityFrameworkCore;
 
 namespace server.Controllers.Features.SalesPipelines
 {
     public class Get
     {
-        public class Query : IRequest<Result>
+        public class Query : IRequest<CommandResult<SalePipeline>>
         {
-            public string SaleId { get; set; }
+            [Required]
+            public Guid? SaleId { get; set; }
         }
 
-        public class Result
+        public class Handler : AsyncRequestHandler<Query, CommandResult<SalePipeline>>
         {
-            public SalePipeline Sale { get; set; }
+            readonly ApplicationDbContext _context;
 
-            public class SalePipeline
+            public Handler(ApplicationDbContext context)
             {
-                public string SaleId { get; set; }
+                _context = context;                
             }
-        }
 
-        public class Handler : AsyncRequestHandler<Query, Result>
-        {
-            protected override Task<Result> Handle(Query request)
+            protected override async Task<CommandResult<SalePipeline>> Handle(Query request)
             {
-                var sale = new Result.SalePipeline() { SaleId = request.SaleId};
-                var result = new Result() { Sale = sale };
+                var salePipeline = await _context.SalesPipelines
+                    .Include(sale => sale.Customer)
+                    .ThenInclude(customer => customer.Person)
+                    .FirstOrDefaultAsync(sale => sale.Id == request.SaleId);
+                    
+                if(salePipeline == null)
+                    return CommandResult<SalePipeline>.Fail($"Sale not found with Id: {request.SaleId}");
 
-                return Task.FromResult(result);
+                return CommandResult<SalePipeline>.Success(salePipeline);
             }
         }
     }

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using server.Shared;
+using server.Models;
 
 namespace server.Controllers.Features.SalesPipelines
 {
@@ -35,9 +36,12 @@ namespace server.Controllers.Features.SalesPipelines
         [Route("{saleId}")]
         public async Task<IActionResult> Get(Get.Query query)
         {
-            var result = await _mediator.Send(query);
+            CommandResult<SalePipeline> result = await _mediator.Send(query);
 
-            return Ok(result.Sale);
+            if(result)
+                return Ok(result.Data);
+
+            return NotFound(result.FailureReason);
         }
     }
 }
