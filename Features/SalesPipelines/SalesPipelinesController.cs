@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using server.Shared;
 using server.Models;
+using server.Features.SalesPipelines;
 
 namespace server.Controllers.Features.SalesPipelines
 {
@@ -42,6 +43,17 @@ namespace server.Controllers.Features.SalesPipelines
                 return Ok(result.Data);
 
             return NotFound(result.FailureReason);
+        }
+
+        [Route("{saleId}/appointments")]
+        public async Task<IActionResult> GetAppointments(GetAppointments.Query query) 
+        {
+            CommandResult result = await _mediator.Send(query);
+
+            if(result)
+                return Ok();
+
+            return NotFound();
         }
     }
 }
