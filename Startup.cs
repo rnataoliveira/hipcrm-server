@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MediatR;
+using server.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace server
 {
@@ -25,6 +27,12 @@ namespace server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMediatR();
+            services.AddDbContext<ApplicationDbContext>(options =>
+                {
+                    var connectionString = Configuration.GetSection("ConnectionStrings").GetValue<string>("DefaultConnection");
+
+                    options.UseSqlServer(connectionString);
+                });
 
             services
                 .AddMvc()

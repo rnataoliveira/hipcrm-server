@@ -12,10 +12,22 @@ namespace server.Controllers.Features.SalesPipelines
 
         public class Handler : AsyncRequestHandler<Command, string>
         {
-            protected override Task<string> Handle(Command request)
+            readonly IMediator _mediator;
+
+            public Handler(IMediator mediator) => _mediator = mediator;
+
+            protected async override Task<string> Handle(Command createSale)
             {
-                return Task.FromResult(request.CustomerId);
+                
+                
+                await _mediator.Publish(new Created() { SaleId = createSale.CustomerId });
+                return createSale.CustomerId;
             }
+        }
+
+        public class Created : INotification 
+        { 
+            public string SaleId { get; set; }
         }
     }
 }
