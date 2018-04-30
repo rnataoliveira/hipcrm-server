@@ -6,7 +6,7 @@ using server.Data;
 using server.Models;
 using server.Shared;
 
-namespace server.Controllers.Features.SalesPipelines
+namespace server.Features.SalesPipelines
 {
     public class Create
     {
@@ -38,7 +38,7 @@ namespace server.Controllers.Features.SalesPipelines
                 await _dbContext.AddAsync(salePipeline);
                 await _dbContext.SaveChangesAsync();
 
-                // await _mediator.Publish(new Created() { SaleId = salePipeline.Id });
+                await _mediator.Publish(new Created() { SaleId = salePipeline.Id });
                 return CommandResult<Guid>.Success(salePipeline.Id);
             }
         }

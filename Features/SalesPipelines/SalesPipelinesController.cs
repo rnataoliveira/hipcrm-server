@@ -6,7 +6,7 @@ using server.Shared;
 using server.Models;
 using server.Features.SalesPipelines;
 
-namespace server.Controllers.Features.SalesPipelines
+namespace server.Features.SalesPipelines
 {
     [Route("sales-pipelines")]
     public class SalesPipelinesController : Controller

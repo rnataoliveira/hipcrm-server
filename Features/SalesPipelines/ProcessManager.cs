@@ -2,13 +2,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 
-namespace server.Controllers.Features.SalesPipelines 
+namespace server.Features.SalesPipelines
 {
     public class ProcessManager : INotificationHandler<Create.Created>
     {
-        public Task Handle(Create.Created notification, CancellationToken cancellationToken)
+        readonly IMediator _mediator;
+        public ProcessManager(IMediator mediator)
         {
-            throw new System.NotImplementedException();
+            _mediator = mediator;
+        }
+
+        public async Task Handle(Create.Created notification, CancellationToken cancellationToken)
+        {
+            var createSaleCalendar = new CreateSaleCalendar.Command() { SaleId = notification.SaleId };
+            await _mediator.Send(createSaleCalendar);
         }
     }
 }

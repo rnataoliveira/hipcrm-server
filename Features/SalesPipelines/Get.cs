@@ -7,7 +7,7 @@ using server.Data;
 using server.Shared;
 using Microsoft.EntityFrameworkCore;
 
-namespace server.Controllers.Features.SalesPipelines
+namespace server.Features.SalesPipelines
 {
     public class Get
     {
