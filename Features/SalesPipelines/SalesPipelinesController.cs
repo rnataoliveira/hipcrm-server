@@ -1,11 +1,13 @@
+using System;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using server.Shared;
 
-namespace server.Controllers.Features.SalesPipelines 
+namespace server.Controllers.Features.SalesPipelines
 {
     [Route("sales-pipelines")]
-    public class SalesPipelinesController : Controller 
+    public class SalesPipelinesController : Controller
     {
         readonly IMediator _mediator;
 
@@ -14,15 +16,24 @@ namespace server.Controllers.Features.SalesPipelines
             _mediator = mediator;
         }
 
-        public async Task<IActionResult> Post([FromBody] Create.Command command) 
+        public async Task<IActionResult> Post([FromBody] Create.Command command)
         {
-            var saleId = await _mediator.Send(command);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            return Created($"/sales-pipelines/{saleId}", new { saleId });
+            CommandResult<Guid> result = await _mediator.Send(command);
+
+            if (!result)
+            {
+                ModelState.AddModelError("customerId", result.FailureReason);
+                return BadRequest(ModelState);
+            }
+
+            return Created($"/sales-pipelines/{result.Data}", new { saleId = result.Data });
         }
 
         [Route("{saleId}")]
-        public async Task<IActionResult> Get(Get.Query query) 
+        public async Task<IActionResult> Get(Get.Query query)
         {
             var result = await _mediator.Send(query);
 
