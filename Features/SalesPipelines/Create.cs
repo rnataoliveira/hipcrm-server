@@ -29,7 +29,7 @@ namespace server.Controllers.Features.SalesPipelines
 
             protected async override Task<CommandResult<Guid>> Handle(Command createSale)
             {
-                var customer = await _dbContext.Customers.FindAsync(createSale.CustomerId);
+                Customer customer = await _dbContext.Customers.FindAsync(createSale.CustomerId);
                 if (customer == null)
                     return CommandResult<Guid>.Fail($"Customer not found with Id: {createSale.CustomerId}");
 

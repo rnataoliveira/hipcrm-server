@@ -16,12 +16,12 @@ namespace server.Controllers.Features.SalesPipelines
             _mediator = mediator;
         }
 
-        public async Task<IActionResult> Post([FromBody] Create.Command command)
+        public async Task<IActionResult> Post([FromBody] Create.Command createSalePipeline)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            CommandResult<Guid> result = await _mediator.Send(command);
+            CommandResult<Guid> result = await _mediator.Send(createSalePipeline);
 
             if (!result)
             {
