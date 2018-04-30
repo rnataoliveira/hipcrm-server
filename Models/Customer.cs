@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace server.Models
 {
@@ -10,24 +11,38 @@ namespace server.Models
 
     public class LegalPerson : Person
     {
+        [Required]
         public string CompanyName { get; set; }
+
+        [Required]
         public string CompanyRegistration { get; set; }
         public string StateRegistration { get; set; }
     }
 
     public class PhysicalPerson : Person
     {
+        [Required]
         public string Name { get; set; }
+        [Required]
         public string Surname { get; set; }
+        [Required]
         public string DocumentNumber { get; set; }
         public string GeneralRegistration { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        [Required]
+        public DateTime BirthDate { get; set; }
+        [Required]
         public string Sex { get; set; }
+        [Required]
         public string MaritalState { get; set; }
     }
 
     public class Address
     {
+        public int Id { get; set; }
+        
+        public Person Person { get; set; }
+        public Guid PersonId { get; set; }
+
         public string ZipCode { get; set; }
 
         public string Street { get; set; }
@@ -47,6 +62,7 @@ namespace server.Models
     {
         public Guid Id { get; set; }
 
+        [Required]
         public Person Person { get; set; }
 
         public string Notes { get; set; }

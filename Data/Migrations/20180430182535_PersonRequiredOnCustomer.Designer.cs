@@ -11,43 +11,15 @@ using server.Data;
 namespace server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180430182535_PersonRequiredOnCustomer")]
+    partial class PersonRequiredOnCustomer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.0-preview2-30571")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("server.Models.Address", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("City");
-
-                    b.Property<string>("Complement");
-
-                    b.Property<string>("Neighborhood");
-
-                    b.Property<string>("Number");
-
-                    b.Property<Guid>("PersonId");
-
-                    b.Property<string>("State");
-
-                    b.Property<string>("Street");
-
-                    b.Property<string>("ZipCode");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PersonId")
-                        .IsUnique();
-
-                    b.ToTable("Address");
-                });
 
             modelBuilder.Entity("server.Models.Customer", b =>
                 {
@@ -63,10 +35,6 @@ namespace server.Data.Migrations
                     b.HasIndex("PersonId");
 
                     b.ToTable("Customers");
-
-                    b.HasData(
-                        new { Id = new Guid("ba6d4b15-fdee-4978-9b6f-a5591b27a9b3"), Notes = "My First Customer!", PersonId = new Guid("faa1a244-b0aa-40c6-a584-ba5530264453") }
-                    );
                 });
 
             modelBuilder.Entity("server.Models.Person", b =>
@@ -102,11 +70,9 @@ namespace server.Data.Migrations
                 {
                     b.HasBaseType("server.Models.Person");
 
-                    b.Property<string>("CompanyName")
-                        .IsRequired();
+                    b.Property<string>("CompanyName");
 
-                    b.Property<string>("CompanyRegistration")
-                        .IsRequired();
+                    b.Property<string>("CompanyRegistration");
 
                     b.Property<string>("StateRegistration");
 
@@ -119,40 +85,23 @@ namespace server.Data.Migrations
                 {
                     b.HasBaseType("server.Models.Person");
 
-                    b.Property<DateTime>("BirthDate");
+                    b.Property<DateTime>("DateOfBirth");
 
-                    b.Property<string>("DocumentNumber")
-                        .IsRequired();
+                    b.Property<string>("DocumentNumber");
 
                     b.Property<string>("GeneralRegistration");
 
-                    b.Property<string>("MaritalState")
-                        .IsRequired();
+                    b.Property<string>("MaritalState");
 
-                    b.Property<string>("Name")
-                        .IsRequired();
+                    b.Property<string>("Name");
 
-                    b.Property<string>("Sex")
-                        .IsRequired();
+                    b.Property<string>("Sex");
 
-                    b.Property<string>("Surname")
-                        .IsRequired();
+                    b.Property<string>("Surname");
 
                     b.ToTable("PhysicalPersons");
 
                     b.HasDiscriminator().HasValue("PhysicalPerson");
-
-                    b.HasData(
-                        new { Id = new Guid("faa1a244-b0aa-40c6-a584-ba5530264453"), BirthDate = new DateTime(1994, 6, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), DocumentNumber = "01046387294", MaritalState = "Engaged", Name = "Renata", Sex = "Female", Surname = "Oliveira" }
-                    );
-                });
-
-            modelBuilder.Entity("server.Models.Address", b =>
-                {
-                    b.HasOne("server.Models.Person", "Person")
-                        .WithOne("Address")
-                        .HasForeignKey("server.Models.Address", "PersonId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("server.Models.Customer", b =>
@@ -161,6 +110,35 @@ namespace server.Data.Migrations
                         .WithMany()
                         .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("server.Models.Person", b =>
+                {
+                    b.OwnsOne("server.Models.Address", "Address", b1 =>
+                        {
+                            b1.Property<Guid?>("PersonId");
+
+                            b1.Property<string>("City");
+
+                            b1.Property<string>("Complement");
+
+                            b1.Property<string>("Neighborhood");
+
+                            b1.Property<string>("Number");
+
+                            b1.Property<string>("State");
+
+                            b1.Property<string>("Street");
+
+                            b1.Property<string>("ZipCode");
+
+                            b1.ToTable("Persons");
+
+                            b1.HasOne("server.Models.Person")
+                                .WithOne("Address")
+                                .HasForeignKey("server.Models.Address", "PersonId")
+                                .OnDelete(DeleteBehavior.Cascade);
+                        });
                 });
 
             modelBuilder.Entity("server.Models.SalePipeline", b =>

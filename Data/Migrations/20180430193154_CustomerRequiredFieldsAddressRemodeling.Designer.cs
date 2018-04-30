@@ -11,9 +11,10 @@ using server.Data;
 namespace server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180430193154_CustomerRequiredFieldsAddressRemodeling")]
+    partial class CustomerRequiredFieldsAddressRemodeling
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,10 +64,6 @@ namespace server.Data.Migrations
                     b.HasIndex("PersonId");
 
                     b.ToTable("Customers");
-
-                    b.HasData(
-                        new { Id = new Guid("ba6d4b15-fdee-4978-9b6f-a5591b27a9b3"), Notes = "My First Customer!", PersonId = new Guid("faa1a244-b0aa-40c6-a584-ba5530264453") }
-                    );
                 });
 
             modelBuilder.Entity("server.Models.Person", b =>
@@ -141,10 +138,6 @@ namespace server.Data.Migrations
                     b.ToTable("PhysicalPersons");
 
                     b.HasDiscriminator().HasValue("PhysicalPerson");
-
-                    b.HasData(
-                        new { Id = new Guid("faa1a244-b0aa-40c6-a584-ba5530264453"), BirthDate = new DateTime(1994, 6, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), DocumentNumber = "01046387294", MaritalState = "Engaged", Name = "Renata", Sex = "Female", Surname = "Oliveira" }
-                    );
                 });
 
             modelBuilder.Entity("server.Models.Address", b =>

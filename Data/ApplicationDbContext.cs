@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using server.Models;
+using System;
 
 namespace server.Data
 {
@@ -18,10 +19,36 @@ namespace server.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Customer>().ToTable("Customers");
-            modelBuilder.Entity<Person>().OwnsOne(p => p.Address).ToTable("Persons");
+            
+            modelBuilder.Entity<Person>().ToTable("Persons")
+                .HasOne(p => p.Address)
+                .WithOne(p => p.Person)
+                .HasForeignKey<Address>(a => a.PersonId);
+
             modelBuilder.Entity<LegalPerson>().ToTable("LegalPersons");
             modelBuilder.Entity<PhysicalPerson>().ToTable("PhysicalPersons");
             modelBuilder.Entity<SalePipeline>().ToTable("SalesPipelines");
+
+            var personId = Guid.NewGuid();
+            modelBuilder.Entity<PhysicalPerson>().HasData(new PhysicalPerson
+            {
+                Id = personId,
+                Name = "Renata",
+                Surname = "Oliveira",
+                DocumentNumber = "01046387294",
+                BirthDate = new DateTime(1994, 06, 23),
+                Sex = "Female",
+                MaritalState = "Engaged"
+            });
+
+            modelBuilder.Entity<Customer>().HasData(
+                new
+                {
+                    Id = Guid.NewGuid(),
+                    Notes = "My First Customer!",
+                    PersonId = personId
+                }
+            );
 
             base.OnModelCreating(modelBuilder);
         }
