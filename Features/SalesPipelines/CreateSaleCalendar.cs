@@ -20,33 +20,33 @@ namespace server.Features.SalesPipelines
         {
             protected override Task Handle(Command request)
             {
-                var flow = new GoogleAuthorizationCodeFlow(
-                new GoogleAuthorizationCodeFlow.Initializer
-                {
-                    ClientSecrets = new ClientSecrets
-                    {
-                        ClientId = "",
-                        ClientSecret = ""
-                    },
-                    Scopes = new[] { CalendarService.Scope.Calendar }
-                });
+                // var flow = new GoogleAuthorizationCodeFlow(
+                // new GoogleAuthorizationCodeFlow.Initializer
+                // {
+                //     ClientSecrets = new ClientSecrets
+                //     {
+                //         ClientId = "",
+                //         ClientSecret = ""
+                //     },
+                //     Scopes = new[] { CalendarService.Scope.Calendar }
+                // });
 
-                var token = new TokenResponse()
-                {
-                    AccessToken = "",
-                    IdToken = "",
-                    ExpiresInSeconds = 3000
-                };
+                // var token = new TokenResponse()
+                // {
+                //     AccessToken = "",
+                //     IdToken = "",
+                //     ExpiresInSeconds = 3000
+                // };
 
-                var credential = new UserCredential(flow, "renatabels", token);
-                var initializer = new BaseClientService.Initializer
-                {
-                    ApplicationName = "Corretora Lopes",
-                    HttpClientInitializer = credential
-                };
-                var calendarService = new CalendarService(initializer);
+                // var credential = new UserCredential(flow, "renatabels", token);
+                // var initializer = new BaseClientService.Initializer
+                // {
+                //     ApplicationName = "Corretora Lopes",
+                //     HttpClientInitializer = credential
+                // };
+                // var calendarService = new CalendarService(initializer);
 
-                throw new System.NotImplementedException();
+                return Task.FromResult(0);
             }
         }
     }

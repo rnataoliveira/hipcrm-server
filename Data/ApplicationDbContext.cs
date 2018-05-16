@@ -33,7 +33,7 @@ namespace server.Data
             modelBuilder.Entity<PhysicalPerson>().HasData(new PhysicalPerson
             {
                 Id = personId,
-                Name = "Renata",
+                FirstName = "Renata",
                 Surname = "Oliveira",
                 DocumentNumber = "01046387294",
                 BirthDate = new DateTime(1994, 06, 23),

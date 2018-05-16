@@ -22,11 +22,13 @@ namespace server.Models
     public class PhysicalPerson : Person
     {
         [Required]
-        public string Name { get; set; }
+        public string FirstName { get; set; }
         [Required]
         public string Surname { get; set; }
+
         [Required]
         public string DocumentNumber { get; set; }
+
         public string GeneralRegistration { get; set; }
         [Required]
         public DateTime BirthDate { get; set; }
@@ -39,7 +41,7 @@ namespace server.Models
     public class Address
     {
         public int Id { get; set; }
-        
+
         public Person Person { get; set; }
         public Guid PersonId { get; set; }
 

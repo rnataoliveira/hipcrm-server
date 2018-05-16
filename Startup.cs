@@ -11,6 +11,8 @@ using Microsoft.Extensions.Options;
 using MediatR;
 using server.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace server
 {
@@ -34,9 +36,19 @@ namespace server
                     options.UseSqlServer(connectionString);
                 });
 
+            services.AddAuthentication(options => {
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(bearer => {
+                bearer.Authority = "https://accounts.google.com/";
+                bearer.RequireHttpsMetadata = false;
+                bearer.Audience = "42472227382-lv313luvu3etp0ck6vnfv67jj06kilv0.apps.googleusercontent.com";
+            });
+
             services
                 .AddMvc()
                 .AddFeatureFolders();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +60,7 @@ namespace server
             }
 
             // app.UseWelcomePage();
+            app.UseAuthentication();
             app.UseMvc();
         }
     }

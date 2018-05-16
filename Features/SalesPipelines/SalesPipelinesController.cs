@@ -5,10 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using server.Shared;
 using server.Models;
 using server.Features.SalesPipelines;
+using Microsoft.AspNetCore.Authorization;
 
 namespace server.Features.SalesPipelines
 {
     [Route("sales-pipelines")]
+    [Authorize]
     public class SalesPipelinesController : Controller
     {
         readonly IMediator _mediator;
