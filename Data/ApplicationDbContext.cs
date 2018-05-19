@@ -30,6 +30,7 @@ namespace server.Data
             modelBuilder.Entity<SalePipeline>().ToTable("SalesPipelines");
 
             var personId = Guid.NewGuid();
+            var person2Id = Guid.NewGuid();
             modelBuilder.Entity<PhysicalPerson>().HasData(new PhysicalPerson
             {
                 Id = personId,
@@ -41,12 +42,23 @@ namespace server.Data
                 MaritalState = "Engaged"
             });
 
+            modelBuilder.Entity<LegalPerson>().HasData(new LegalPerson{
+                Id = person2Id,
+                CompanyName = "Corretora Lopes",
+                CompanyRegistration = "02.915.465/0001-06"
+            });
+
             modelBuilder.Entity<Customer>().HasData(
                 new
                 {
                     Id = Guid.NewGuid(),
                     Notes = "My First Customer!",
                     PersonId = personId
+                },
+                new {
+                    Id = Guid.NewGuid(),
+                    Notes = "My Company Customer!",
+                    PersonId = person2Id
                 }
             );
 

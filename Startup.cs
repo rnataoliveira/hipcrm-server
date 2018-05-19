@@ -1,22 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using MediatR;
 using server.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace server
 {
-    public class Startup
+  public class Startup
     {
         public Startup(IConfiguration configuration)
         {
@@ -28,6 +21,14 @@ namespace server
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMemoryCache();
+            services.AddMiniProfiler(options => {
+                options.SqlFormatter = new StackExchange.Profiling.SqlFormatters.InlineFormatter();
+                options.TrackConnectionOpenClose = true;
+                options.ResultsAuthorize = request => { return true; };
+                options.RouteBasePath = "/profiler";
+            });
+
             services.AddMediatR();
             services.AddDbContext<ApplicationDbContext>(options =>
                 {
@@ -60,6 +61,7 @@ namespace server
             }
 
             // app.UseWelcomePage();
+            app.UseMiniProfiler();
             app.UseAuthentication();
             app.UseMvc();
         }

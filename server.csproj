@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.50.5" />
     <PackageReference Include="Google.Apis" Version="1.33.0" />
     <PackageReference Include="Google.Apis.Calendar.v3" Version="1.33.0.1209" />
     <PackageReference Include="MediatR" Version="5.0.1-alpha-0002" />
@@ -19,6 +20,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.0-preview2-final" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.0-preview2-final" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.1.0-preview1-final" />
+    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.0.0-beta.50" />
     <PackageReference Include="OdeToCode.AddFeatureFolders" Version="2.0.1" />
   </ItemGroup>
 
