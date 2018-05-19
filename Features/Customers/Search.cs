@@ -20,6 +20,7 @@ namespace server.Features.Customers
     public class Query : IRequest<IEnumerable<CustomerSearchResult>>
     {
       public string Q { get; set; }
+
     }
 
     public class Handler : AsyncRequestHandler<Query, IEnumerable<CustomerSearchResult>>
@@ -50,7 +51,7 @@ namespace server.Features.Customers
             INNER JOIN Persons P ON P.Id = C.PersonId
             WHERE 
                 (
-                    P.FirstName LIKE '%' + @Q + '%' OR
+                    CONCAT(P.FirstName, ' ', P.Surname) LIKE '%' + @Q + '%' OR
                     P.CompanyName LIKE '%' + @Q + '%'
                 )
             OR
