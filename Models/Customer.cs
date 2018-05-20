@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace server.Models
 {
-    public abstract class Person
+    public abstract class PersonalData
     {
         public Guid Id { get; set; }
         public Address Address { get; set; }
     }
 
-    public class LegalPerson : Person
+    public class LegalPerson : PersonalData
     {
         [Required]
         public string CompanyName { get; set; }
@@ -19,7 +19,7 @@ namespace server.Models
         public string StateRegistration { get; set; }
     }
 
-    public class PhysicalPerson : Person
+    public class PhysicalPerson : PersonalData
     {
         [Required]
         public string FirstName { get; set; }
@@ -42,7 +42,7 @@ namespace server.Models
     {
         public int Id { get; set; }
 
-        public Person Person { get; set; }
+        public PersonalData Person { get; set; }
         public Guid PersonId { get; set; }
 
         public string ZipCode { get; set; }
@@ -65,7 +65,7 @@ namespace server.Models
         public Guid Id { get; set; }
 
         [Required]
-        public Person Person { get; set; }
+        public PersonalData PersonalData { get; set; }
 
         public string Notes { get; set; }
     }

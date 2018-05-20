@@ -30,7 +30,7 @@ namespace server.Features.SalesPipelines
             {
                 var salePipeline = await _context.SalesPipelines
                     .Include(sale => sale.Customer)
-                    .ThenInclude(customer => customer.Person)
+                    .ThenInclude(customer => customer.PersonalData)
                     .FirstOrDefaultAsync(sale => sale.Id == request.SaleId);
                     
                 if(salePipeline == null)
