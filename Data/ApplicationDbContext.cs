@@ -7,9 +7,9 @@ namespace server.Data
     public class ApplicationDbContext : DbContext
     {
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<Person> Persons { get; set; }
-        public DbSet<LegalPerson> LegalPersons { get; set; }
-        public DbSet<PhysicalPerson> PhysicalPersons { get; set; }
+        public DbSet<PersonalData> PersonalsData { get; set; }
+        public DbSet<LegalPerson> LegalPersonsData { get; set; }
+        public DbSet<PhysicalPerson> PhysicalsPersonsData { get; set; }
         public DbSet<SalePipeline> SalesPipelines { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
@@ -18,16 +18,16 @@ namespace server.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Customer>().ToTable("Customers");
+            modelBuilder.Entity<Customer>().ToTable("Customer");
             
-            modelBuilder.Entity<Person>().ToTable("Persons")
+            modelBuilder.Entity<PersonalData>().ToTable("PersonalData")
                 .HasOne(p => p.Address)
                 .WithOne(p => p.Person)
                 .HasForeignKey<Address>(a => a.PersonId);
 
-            modelBuilder.Entity<LegalPerson>().ToTable("LegalPersons");
-            modelBuilder.Entity<PhysicalPerson>().ToTable("PhysicalPersons");
-            modelBuilder.Entity<SalePipeline>().ToTable("SalesPipelines");
+            modelBuilder.Entity<LegalPerson>().ToTable("LegalPersonData");
+            modelBuilder.Entity<PhysicalPerson>().ToTable("PhysicalPersonData");
+            modelBuilder.Entity<SalePipeline>().ToTable("SalesPipeline");
 
             var personId = Guid.NewGuid();
             var person2Id = Guid.NewGuid();
@@ -53,12 +53,12 @@ namespace server.Data
                 {
                     Id = Guid.NewGuid(),
                     Notes = "My First Customer!",
-                    PersonId = personId
+                    PersonalDataId = personId
                 },
                 new {
                     Id = Guid.NewGuid(),
                     Notes = "My Company Customer!",
-                    PersonId = person2Id
+                    PersonalDataId = person2Id
                 }
             );
 
