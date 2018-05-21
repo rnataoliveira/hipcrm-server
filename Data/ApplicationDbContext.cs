@@ -26,41 +26,46 @@ namespace server.Data
                 .HasForeignKey<Address>(a => a.PersonId);
 
             modelBuilder.Entity<LegalPerson>().ToTable("LegalPersonData");
-            modelBuilder.Entity<PhysicalPerson>().ToTable("PhysicalPersonData");
+            modelBuilder.Entity<PhysicalPerson>(builder => {
+                builder.OwnsOne(x => x.CellPhone);
+                builder.OwnsOne(x => x.Phone);
+
+                builder.ToTable("PhysicalPersonData");
+            });
             modelBuilder.Entity<SalePipeline>().ToTable("SalesPipeline");
 
-            var personId = Guid.NewGuid();
-            var person2Id = Guid.NewGuid();
-            modelBuilder.Entity<PhysicalPerson>().HasData(new PhysicalPerson
-            {
-                Id = personId,
-                FirstName = "Renata",
-                Surname = "Oliveira",
-                DocumentNumber = "01046387294",
-                BirthDate = new DateTime(1994, 06, 23),
-                Sex = "Female",
-                MaritalState = "Engaged"
-            });
+            // var personId = Guid.NewGuid();
+            // var person2Id = Guid.NewGuid();
+            // modelBuilder.Entity<PhysicalPerson>().HasData(new PhysicalPerson
+            // {
+            //     Id = personId,
+            //     FirstName = "Renata",
+            //     Surname = "Oliveira",
+            //     DocumentNumber = "01046387294",
+            //     BirthDate = new DateTime(1994, 06, 23),
+            //     Sex = "Female",
+            //     MaritalState = "Engaged"
+            // });
 
-            modelBuilder.Entity<LegalPerson>().HasData(new LegalPerson{
-                Id = person2Id,
-                CompanyName = "Corretora Lopes",
-                CompanyRegistration = "02.915.465/0001-06"
-            });
+            // modelBuilder.Entity<LegalPerson>().HasData(new LegalPerson{
+            //     Id = person2Id,
+            //     CompanyName = "Corretora Lopes",
+            //     CompanyRegistration = "02.915.465/0001-06"
+            // });
 
-            modelBuilder.Entity<Customer>().HasData(
-                new
-                {
-                    Id = Guid.NewGuid(),
-                    Notes = "My First Customer!",
-                    PersonalDataId = personId
-                },
-                new {
-                    Id = Guid.NewGuid(),
-                    Notes = "My Company Customer!",
-                    PersonalDataId = person2Id
-                }
-            );
+            // modelBuilder.Entity<Customer>().HasData(
+            //     new
+            //     {
+            //         Id = Guid.NewGuid(),
+            //         Notes = "My First Customer!",
+            //         PersonalDataId = personId
+            //     },
+            //     new {
+            //         Id = Guid.NewGuid(),
+            //         Notes = "My Company Customer!",
+            //         PersonalDataId = person2Id
+            //     }
+            // );
 
             base.OnModelCreating(modelBuilder);
         }
