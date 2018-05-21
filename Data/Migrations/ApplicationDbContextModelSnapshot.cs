@@ -95,6 +95,8 @@ namespace server.Data.Migrations
                     b.Property<string>("DocumentNumber")
                         .IsRequired();
 
+                    b.Property<string>("Email");
+
                     b.Property<string>("FirstName")
                         .IsRequired();
 
@@ -114,7 +116,7 @@ namespace server.Data.Migrations
                     b.HasDiscriminator().HasValue("PhysicalPerson");
 
                     b.HasData(
-                        new { Id = new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3"), BirthDate = new DateTime(1994, 6, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), DocumentNumber = "01046387294", FirstName = "Renata", GeneralRegistration = "", MaritalState = "Engaged", Sex = "F", Surname = "Oliveira" }
+                        new { Id = new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3"), BirthDate = new DateTime(1994, 6, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), DocumentNumber = "01046387294", Email = "renatatest@gmail.com", FirstName = "Renata", GeneralRegistration = "", MaritalState = "Engaged", Sex = "F", Surname = "Oliveira" }
                     );
                 });
 

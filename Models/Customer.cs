@@ -35,6 +35,8 @@ namespace server.Models
     [Required]
     public DateTime BirthDate { get; set; }
 
+    public int Age => DateTime.UtcNow.Year - BirthDate.Year;
+
     [Required]
     public string Sex { get; set; }
 
@@ -44,6 +46,8 @@ namespace server.Models
     public PhoneNumber Phone { get; set; }
 
     public PhoneNumber CellPhone { get; set; }
+
+    public string Email { get; set; }
   }
 
   public class PhoneNumber

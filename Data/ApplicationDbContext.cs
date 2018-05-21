@@ -43,7 +43,8 @@ namespace server.Data
                     GeneralRegistration = "",
                     BirthDate = new DateTime(1994, 06, 23),
                     Sex = "F",
-                    MaritalState = "Engaged"
+                    MaritalState = "Engaged",
+                    Email = "renatatest@gmail.com"
                 });
                 builder.OwnsOne(x => x.CellPhone).HasData(
                     new { PhysicalPersonId = personalId, AreaCode = "11", Number = "959463856" }

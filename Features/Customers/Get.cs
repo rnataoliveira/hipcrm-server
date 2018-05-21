@@ -49,6 +49,7 @@ namespace server.Features.Customers
       }
 
       public string Type => this.PersonalData.GetType().Name.ToString();
+
     }
   }
 }
