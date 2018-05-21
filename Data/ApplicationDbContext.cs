@@ -20,18 +20,22 @@ namespace server.Data
         {
             modelBuilder.Entity<Customer>().ToTable("Customer");
             
-            modelBuilder.Entity<PersonalData>().ToTable("PersonalData")
-                .HasOne(p => p.Address)
-                .WithOne(p => p.Person)
-                .HasForeignKey<Address>(a => a.PersonId);
+            // modelBuilder.Entity<PersonalData>().ToTable("PersonalData")
+            //     .HasOne(p => p.Address)
+            //     .WithOne(p => p.Person)
+            //     .HasForeignKey<Address>(a => a.PersonId);
 
-            modelBuilder.Entity<LegalPerson>().ToTable("LegalPersonData");
+            modelBuilder.Entity<PersonalData>(builder => {
+                builder.OwnsOne(x => x.Address);
+                builder.ToTable("PersonalData");
+            });
+
+            modelBuilder.Entity<LegalPerson>();
             modelBuilder.Entity<PhysicalPerson>(builder => {
                 builder.OwnsOne(x => x.CellPhone);
                 builder.OwnsOne(x => x.Phone);
-
-                builder.ToTable("PhysicalPersonData");
             });
+            
             modelBuilder.Entity<SalePipeline>().ToTable("SalesPipeline");
 
             // var personId = Guid.NewGuid();

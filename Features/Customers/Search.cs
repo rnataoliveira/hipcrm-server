@@ -47,8 +47,8 @@ namespace server.Features.Customers
                     ELSE P.CompanyRegistration
                     END
                 ) DocumentNumber
-            FROM Customers C
-            INNER JOIN Persons P ON P.Id = C.PersonId
+            FROM Customer C
+            INNER JOIN PersonalData P ON P.Id = C.PersonalDataId
             WHERE 
                 (
                     CONCAT(P.FirstName, ' ', P.Surname) LIKE '%' + @Q + '%' OR
