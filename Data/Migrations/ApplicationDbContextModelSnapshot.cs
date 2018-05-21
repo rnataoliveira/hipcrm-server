@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 using server.Data;
@@ -33,6 +34,10 @@ namespace server.Data.Migrations
                     b.HasIndex("PersonalDataId");
 
                     b.ToTable("Customer");
+
+                    b.HasData(
+                        new { Id = new Guid("a8c46259-ee81-4206-8ab8-134d64c01df8"), Notes = "My Fist Lady Customer!", PersonalDataId = new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3") }
+                    );
                 });
 
             modelBuilder.Entity("server.Models.PersonalData", b =>
@@ -76,7 +81,7 @@ namespace server.Data.Migrations
 
                     b.Property<string>("StateRegistration");
 
-                    b.ToTable("LegalPersonData");
+                    b.ToTable("LegalPerson");
 
                     b.HasDiscriminator().HasValue("LegalPerson");
                 });
@@ -104,9 +109,13 @@ namespace server.Data.Migrations
                     b.Property<string>("Surname")
                         .IsRequired();
 
-                    b.ToTable("PhysicalPersonData");
+                    b.ToTable("PhysicalPerson");
 
                     b.HasDiscriminator().HasValue("PhysicalPerson");
+
+                    b.HasData(
+                        new { Id = new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3"), BirthDate = new DateTime(1994, 6, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), DocumentNumber = "01046387294", FirstName = "Renata", GeneralRegistration = "", MaritalState = "Engaged", Sex = "F", Surname = "Oliveira" }
+                    );
                 });
 
             modelBuilder.Entity("server.Models.Customer", b =>
@@ -143,6 +152,10 @@ namespace server.Data.Migrations
                                 .WithOne("Address")
                                 .HasForeignKey("server.Models.Address", "PersonalDataId")
                                 .OnDelete(DeleteBehavior.Cascade);
+
+                            b.HasData(
+                                new { PersonalDataId = new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3"), City = "San Junipero", Complement = "End of Street", Neighborhood = "Junipero Coast", Number = "99", State = "VR", Street = "1st", ZipCode = "05037001" }
+                            );
                         });
                 });
 
@@ -170,6 +183,10 @@ namespace server.Data.Migrations
                                 .WithOne("CellPhone")
                                 .HasForeignKey("server.Models.PhoneNumber", "PhysicalPersonId")
                                 .OnDelete(DeleteBehavior.Cascade);
+
+                            b.HasData(
+                                new { PhysicalPersonId = new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3"), AreaCode = "11", Number = "959463856" }
+                            );
                         });
 
                     b.OwnsOne("server.Models.PhoneNumber", "Phone", b1 =>
@@ -186,6 +203,10 @@ namespace server.Data.Migrations
                                 .WithOne("Phone")
                                 .HasForeignKey("server.Models.PhoneNumber", "PhysicalPersonId")
                                 .OnDelete(DeleteBehavior.Cascade);
+
+                            b.HasData(
+                                new { PhysicalPersonId = new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3"), AreaCode = "11", Number = "954546666" }
+                            );
                         });
                 });
 #pragma warning restore 612, 618

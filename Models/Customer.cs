@@ -77,8 +77,6 @@ namespace server.Models
     [Required]
     public PersonalData PersonalData { get; set; }
 
-    public Guid PersonalDataId { get; set; }
-
     public string Notes { get; set; }
   }
 }

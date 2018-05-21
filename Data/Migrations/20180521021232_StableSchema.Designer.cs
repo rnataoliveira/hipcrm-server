@@ -11,8 +11,8 @@ using server.Data;
 namespace server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180430182535_PersonRequiredOnCustomer")]
-    partial class PersonRequiredOnCustomer
+    [Migration("20180521021232_StableSchema")]
+    partial class StableSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,16 +28,16 @@ namespace server.Data.Migrations
 
                     b.Property<string>("Notes");
 
-                    b.Property<Guid>("PersonId");
+                    b.Property<Guid>("PersonalDataId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PersonId");
+                    b.HasIndex("PersonalDataId");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customer");
                 });
 
-            modelBuilder.Entity("server.Models.Person", b =>
+            modelBuilder.Entity("server.Models.PersonalData", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -47,9 +47,9 @@ namespace server.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Persons");
+                    b.ToTable("PersonalData");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("Person");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("PersonalData");
                 });
 
             modelBuilder.Entity("server.Models.SalePipeline", b =>
@@ -63,60 +63,67 @@ namespace server.Data.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("SalesPipelines");
+                    b.ToTable("SalesPipeline");
                 });
 
             modelBuilder.Entity("server.Models.LegalPerson", b =>
                 {
-                    b.HasBaseType("server.Models.Person");
+                    b.HasBaseType("server.Models.PersonalData");
 
-                    b.Property<string>("CompanyName");
+                    b.Property<string>("CompanyName")
+                        .IsRequired();
 
-                    b.Property<string>("CompanyRegistration");
+                    b.Property<string>("CompanyRegistration")
+                        .IsRequired();
 
                     b.Property<string>("StateRegistration");
 
-                    b.ToTable("LegalPersons");
+                    b.ToTable("LegalPerson");
 
                     b.HasDiscriminator().HasValue("LegalPerson");
                 });
 
             modelBuilder.Entity("server.Models.PhysicalPerson", b =>
                 {
-                    b.HasBaseType("server.Models.Person");
+                    b.HasBaseType("server.Models.PersonalData");
 
-                    b.Property<DateTime>("DateOfBirth");
+                    b.Property<DateTime>("BirthDate");
 
-                    b.Property<string>("DocumentNumber");
+                    b.Property<string>("DocumentNumber")
+                        .IsRequired();
+
+                    b.Property<string>("FirstName")
+                        .IsRequired();
 
                     b.Property<string>("GeneralRegistration");
 
-                    b.Property<string>("MaritalState");
+                    b.Property<string>("MaritalState")
+                        .IsRequired();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Sex")
+                        .IsRequired();
 
-                    b.Property<string>("Sex");
+                    b.Property<string>("Surname")
+                        .IsRequired();
 
-                    b.Property<string>("Surname");
-
-                    b.ToTable("PhysicalPersons");
+                    b.ToTable("PhysicalPerson");
 
                     b.HasDiscriminator().HasValue("PhysicalPerson");
                 });
 
             modelBuilder.Entity("server.Models.Customer", b =>
                 {
-                    b.HasOne("server.Models.Person", "Person")
+                    b.HasOne("server.Models.PersonalData", "PersonalData")
                         .WithMany()
-                        .HasForeignKey("PersonId")
+                        .HasForeignKey("PersonalDataId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("server.Models.Person", b =>
+            modelBuilder.Entity("server.Models.PersonalData", b =>
                 {
                     b.OwnsOne("server.Models.Address", "Address", b1 =>
                         {
-                            b1.Property<Guid?>("PersonId");
+                            b1.Property<Guid?>("PersonalDataId");
 
                             b1.Property<string>("City");
 
@@ -132,11 +139,11 @@ namespace server.Data.Migrations
 
                             b1.Property<string>("ZipCode");
 
-                            b1.ToTable("Persons");
+                            b1.ToTable("PersonalData");
 
-                            b1.HasOne("server.Models.Person")
+                            b1.HasOne("server.Models.PersonalData")
                                 .WithOne("Address")
-                                .HasForeignKey("server.Models.Address", "PersonId")
+                                .HasForeignKey("server.Models.Address", "PersonalDataId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
                 });
@@ -147,6 +154,41 @@ namespace server.Data.Migrations
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("server.Models.PhysicalPerson", b =>
+                {
+                    b.OwnsOne("server.Models.PhoneNumber", "CellPhone", b1 =>
+                        {
+                            b1.Property<Guid>("PhysicalPersonId");
+
+                            b1.Property<string>("AreaCode");
+
+                            b1.Property<string>("Number");
+
+                            b1.ToTable("PersonalData");
+
+                            b1.HasOne("server.Models.PhysicalPerson")
+                                .WithOne("CellPhone")
+                                .HasForeignKey("server.Models.PhoneNumber", "PhysicalPersonId")
+                                .OnDelete(DeleteBehavior.Cascade);
+                        });
+
+                    b.OwnsOne("server.Models.PhoneNumber", "Phone", b1 =>
+                        {
+                            b1.Property<Guid>("PhysicalPersonId");
+
+                            b1.Property<string>("AreaCode");
+
+                            b1.Property<string>("Number");
+
+                            b1.ToTable("PersonalData");
+
+                            b1.HasOne("server.Models.PhysicalPerson")
+                                .WithOne("Phone")
+                                .HasForeignKey("server.Models.PhoneNumber", "PhysicalPersonId")
+                                .OnDelete(DeleteBehavior.Cascade);
+                        });
                 });
 #pragma warning restore 612, 618
         }

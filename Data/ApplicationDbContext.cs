@@ -19,11 +19,6 @@ namespace server.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Customer>().ToTable("Customer");
-            
-            // modelBuilder.Entity<PersonalData>().ToTable("PersonalData")
-            //     .HasOne(p => p.Address)
-            //     .WithOne(p => p.Person)
-            //     .HasForeignKey<Address>(a => a.PersonId);
 
             modelBuilder.Entity<PersonalData>(builder => {
                 builder.OwnsOne(x => x.Address);
@@ -37,6 +32,44 @@ namespace server.Data
             });
             
             modelBuilder.Entity<SalePipeline>().ToTable("SalesPipeline");
+
+            var personalId = new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3");
+            modelBuilder.Entity<PhysicalPerson>(builder => {
+                builder.HasData(new {
+                    Id = personalId,
+                    FirstName = "Renata",
+                    Surname = "Oliveira",
+                    DocumentNumber = "01046387294",
+                    GeneralRegistration = "",
+                    BirthDate = new DateTime(1994, 06, 23),
+                    Sex = "F",
+                    MaritalState = "Engaged"
+                });
+                builder.OwnsOne(x => x.CellPhone).HasData(
+                    new { PhysicalPersonId = personalId, AreaCode = "11", Number = "959463856" }
+                );
+                builder.OwnsOne(x => x.Phone).HasData(
+                    new { PhysicalPersonId = personalId, AreaCode = "11", Number = "954546666" }
+                );
+                builder.OwnsOne(x => x.Address).HasData(
+                    new { 
+                        PersonalDataId = personalId,
+                        ZipCode = "05037001",
+                        Street = "1st",
+                        Number = "99",
+                        Neighborhood = "Junipero Coast",
+                        Complement = "End of Street",
+                        City = "San Junipero",
+                        State = "VR"
+                    }
+                );
+            });
+            modelBuilder.Entity<Customer>(builder => {
+                builder.HasData(
+                    new { Id = new Guid("a8c46259-ee81-4206-8ab8-134d64c01df8"), PersonalDataId = personalId, Notes = "My Fist Lady Customer!" }
+                );
+            });
+
 
             // var personId = Guid.NewGuid();
             // var person2Id = Guid.NewGuid();

@@ -11,8 +11,8 @@ using server.Data;
 namespace server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180520192648_RenamePersonToPersonalData")]
-    partial class RenamePersonToPersonalData
+    [Migration("20180521021340_SeedFirstCustomer")]
+    partial class SeedFirstCustomer
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,35 +20,6 @@ namespace server.Data.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.1.0-preview2-30571")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("server.Models.Address", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("City");
-
-                    b.Property<string>("Complement");
-
-                    b.Property<string>("Neighborhood");
-
-                    b.Property<string>("Number");
-
-                    b.Property<Guid>("PersonId");
-
-                    b.Property<string>("State");
-
-                    b.Property<string>("Street");
-
-                    b.Property<string>("ZipCode");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PersonId")
-                        .IsUnique();
-
-                    b.ToTable("Address");
-                });
 
             modelBuilder.Entity("server.Models.Customer", b =>
                 {
@@ -66,8 +37,7 @@ namespace server.Data.Migrations
                     b.ToTable("Customer");
 
                     b.HasData(
-                        new { Id = new Guid("4470c028-a1d0-479a-aa81-8feaf8f1638a"), Notes = "My First Customer!", PersonalDataId = new Guid("5aba30bb-62ca-4276-b84f-1dbaa1c472ae") },
-                        new { Id = new Guid("d6e4633c-7904-4b36-9e59-57d4661b787c"), Notes = "My Company Customer!", PersonalDataId = new Guid("b0a9e3f5-6651-473f-91eb-070d1994692c") }
+                        new { Id = new Guid("a8c46259-ee81-4206-8ab8-134d64c01df8"), Notes = "My Fist Lady Customer!", PersonalDataId = new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3") }
                     );
                 });
 
@@ -112,13 +82,9 @@ namespace server.Data.Migrations
 
                     b.Property<string>("StateRegistration");
 
-                    b.ToTable("LegalPersonData");
+                    b.ToTable("LegalPerson");
 
                     b.HasDiscriminator().HasValue("LegalPerson");
-
-                    b.HasData(
-                        new { Id = new Guid("b0a9e3f5-6651-473f-91eb-070d1994692c"), CompanyName = "Corretora Lopes", CompanyRegistration = "02.915.465/0001-06" }
-                    );
                 });
 
             modelBuilder.Entity("server.Models.PhysicalPerson", b =>
@@ -144,21 +110,13 @@ namespace server.Data.Migrations
                     b.Property<string>("Surname")
                         .IsRequired();
 
-                    b.ToTable("PhysicalPersonData");
+                    b.ToTable("PhysicalPerson");
 
                     b.HasDiscriminator().HasValue("PhysicalPerson");
 
                     b.HasData(
-                        new { Id = new Guid("5aba30bb-62ca-4276-b84f-1dbaa1c472ae"), BirthDate = new DateTime(1994, 6, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), DocumentNumber = "01046387294", FirstName = "Renata", MaritalState = "Engaged", Sex = "Female", Surname = "Oliveira" }
+                        new { Id = new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3"), BirthDate = new DateTime(1994, 6, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), DocumentNumber = "01046387294", FirstName = "Renata", GeneralRegistration = "", MaritalState = "Engaged", Sex = "F", Surname = "Oliveira" }
                     );
-                });
-
-            modelBuilder.Entity("server.Models.Address", b =>
-                {
-                    b.HasOne("server.Models.PersonalData", "Person")
-                        .WithOne("Address")
-                        .HasForeignKey("server.Models.Address", "PersonId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("server.Models.Customer", b =>
@@ -169,12 +127,88 @@ namespace server.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("server.Models.PersonalData", b =>
+                {
+                    b.OwnsOne("server.Models.Address", "Address", b1 =>
+                        {
+                            b1.Property<Guid?>("PersonalDataId");
+
+                            b1.Property<string>("City");
+
+                            b1.Property<string>("Complement");
+
+                            b1.Property<string>("Neighborhood");
+
+                            b1.Property<string>("Number");
+
+                            b1.Property<string>("State");
+
+                            b1.Property<string>("Street");
+
+                            b1.Property<string>("ZipCode");
+
+                            b1.ToTable("PersonalData");
+
+                            b1.HasOne("server.Models.PersonalData")
+                                .WithOne("Address")
+                                .HasForeignKey("server.Models.Address", "PersonalDataId")
+                                .OnDelete(DeleteBehavior.Cascade);
+
+                            b.HasData(
+                                new { PersonalDataId = new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3"), City = "San Junipero", Complement = "End of Street", Neighborhood = "Junipero Coast", Number = "99", State = "VR", Street = "1st", ZipCode = "05037001" }
+                            );
+                        });
+                });
+
             modelBuilder.Entity("server.Models.SalePipeline", b =>
                 {
                     b.HasOne("server.Models.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("server.Models.PhysicalPerson", b =>
+                {
+                    b.OwnsOne("server.Models.PhoneNumber", "CellPhone", b1 =>
+                        {
+                            b1.Property<Guid>("PhysicalPersonId");
+
+                            b1.Property<string>("AreaCode");
+
+                            b1.Property<string>("Number");
+
+                            b1.ToTable("PersonalData");
+
+                            b1.HasOne("server.Models.PhysicalPerson")
+                                .WithOne("CellPhone")
+                                .HasForeignKey("server.Models.PhoneNumber", "PhysicalPersonId")
+                                .OnDelete(DeleteBehavior.Cascade);
+
+                            b.HasData(
+                                new { PhysicalPersonId = new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3"), AreaCode = "11", Number = "959463856" }
+                            );
+                        });
+
+                    b.OwnsOne("server.Models.PhoneNumber", "Phone", b1 =>
+                        {
+                            b1.Property<Guid>("PhysicalPersonId");
+
+                            b1.Property<string>("AreaCode");
+
+                            b1.Property<string>("Number");
+
+                            b1.ToTable("PersonalData");
+
+                            b1.HasOne("server.Models.PhysicalPerson")
+                                .WithOne("Phone")
+                                .HasForeignKey("server.Models.PhoneNumber", "PhysicalPersonId")
+                                .OnDelete(DeleteBehavior.Cascade);
+
+                            b.HasData(
+                                new { PhysicalPersonId = new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3"), AreaCode = "11", Number = "954546666" }
+                            );
+                        });
                 });
 #pragma warning restore 612, 618
         }
