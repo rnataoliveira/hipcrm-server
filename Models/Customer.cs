@@ -17,6 +17,10 @@ namespace server.Models
     [Required]
     public string CompanyRegistration { get; set; }
     public string StateRegistration { get; set; }
+
+    public PhoneNumber Phone { get; set; }
+
+    public string Email { get; set; }
   }
 
   public class PhysicalPerson : PersonalData

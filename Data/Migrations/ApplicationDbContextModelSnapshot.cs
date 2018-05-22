@@ -36,7 +36,8 @@ namespace server.Data.Migrations
                     b.ToTable("Customer");
 
                     b.HasData(
-                        new { Id = new Guid("a8c46259-ee81-4206-8ab8-134d64c01df8"), Notes = "My Fist Lady Customer!", PersonalDataId = new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3") }
+                        new { Id = new Guid("a8c46259-ee81-4206-8ab8-134d64c01df8"), Notes = "My Fist Lady Customer!", PersonalDataId = new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3") },
+                        new { Id = new Guid("9c9c0642-cd86-4cee-af0c-be3cd67750f4"), Notes = "Bitch!", PersonalDataId = new Guid("9b6e2f53-2a34-4128-97f5-8056545aed76") }
                     );
                 });
 
@@ -79,11 +80,17 @@ namespace server.Data.Migrations
                     b.Property<string>("CompanyRegistration")
                         .IsRequired();
 
+                    b.Property<string>("Email");
+
                     b.Property<string>("StateRegistration");
 
                     b.ToTable("LegalPerson");
 
                     b.HasDiscriminator().HasValue("LegalPerson");
+
+                    b.HasData(
+                        new { Id = new Guid("9b6e2f53-2a34-4128-97f5-8056545aed76"), CompanyName = "Lopes Corretora", CompanyRegistration = "120.239.123/0001", Email = "lopes@hotmail.com", StateRegistration = "123456789-10" }
+                    );
                 });
 
             modelBuilder.Entity("server.Models.PhysicalPerson", b =>
@@ -95,7 +102,8 @@ namespace server.Data.Migrations
                     b.Property<string>("DocumentNumber")
                         .IsRequired();
 
-                    b.Property<string>("Email");
+                    b.Property<string>("Email")
+                        .HasColumnName("PhysicalPerson_Email");
 
                     b.Property<string>("FirstName")
                         .IsRequired();
@@ -156,7 +164,8 @@ namespace server.Data.Migrations
                                 .OnDelete(DeleteBehavior.Cascade);
 
                             b.HasData(
-                                new { PersonalDataId = new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3"), City = "San Junipero", Complement = "End of Street", Neighborhood = "Junipero Coast", Number = "99", State = "VR", Street = "1st", ZipCode = "05037001" }
+                                new { PersonalDataId = new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3"), City = "San Junipero", Complement = "End of Street", Neighborhood = "Junipero Coast", Number = "99", State = "VR", Street = "1st", ZipCode = "05037001" },
+                                new { PersonalDataId = new Guid("9b6e2f53-2a34-4128-97f5-8056545aed76"), City = "Jão Pietro", Complement = "White House", Neighborhood = "St Coast", Number = "300", State = "KL", Street = "2st", ZipCode = "02089111" }
                             );
                         });
                 });
@@ -167,6 +176,29 @@ namespace server.Data.Migrations
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("server.Models.LegalPerson", b =>
+                {
+                    b.OwnsOne("server.Models.PhoneNumber", "Phone", b1 =>
+                        {
+                            b1.Property<Guid>("LegalPersonId");
+
+                            b1.Property<string>("AreaCode");
+
+                            b1.Property<string>("Number");
+
+                            b1.ToTable("PersonalData");
+
+                            b1.HasOne("server.Models.LegalPerson")
+                                .WithOne("Phone")
+                                .HasForeignKey("server.Models.PhoneNumber", "LegalPersonId")
+                                .OnDelete(DeleteBehavior.Cascade);
+
+                            b.HasData(
+                                new { LegalPersonId = new Guid("9b6e2f53-2a34-4128-97f5-8056545aed76"), AreaCode = "11", Number = "3535-2058" }
+                            );
+                        });
                 });
 
             modelBuilder.Entity("server.Models.PhysicalPerson", b =>
@@ -195,9 +227,11 @@ namespace server.Data.Migrations
                         {
                             b1.Property<Guid>("PhysicalPersonId");
 
-                            b1.Property<string>("AreaCode");
+                            b1.Property<string>("AreaCode")
+                                .HasColumnName("PhoneNumber_Phone_AreaCode");
 
-                            b1.Property<string>("Number");
+                            b1.Property<string>("Number")
+                                .HasColumnName("PhoneNumber_Phone_Number");
 
                             b1.ToTable("PersonalData");
 
