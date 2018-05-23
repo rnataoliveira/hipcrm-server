@@ -6,6 +6,8 @@ using server.Shared;
 using server.Models;
 using server.Features.SalesPipelines;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Globalization;
 
 namespace server.Features.SalesPipelines
 {
@@ -20,12 +22,19 @@ namespace server.Features.SalesPipelines
             _mediator = mediator;
         }
 
-        public async Task<IActionResult> Post([FromBody] Create.Command createSalePipeline)
+        public async Task<IActionResult> Post(
+            [FromBody] Create.Command command, 
+            [FromHeader] string accessToken
+        )
         {
-            if (!ModelState.IsValid)
+            ModelState.Clear();
+
+            command.AccessToken = accessToken;
+
+            if (!TryValidateModel(command))
                 return BadRequest(ModelState);
 
-            CommandResult<Guid> result = await _mediator.Send(createSalePipeline);
+            CommandResult<Guid> result = await _mediator.Send(command);
 
             if (!result)
             {

@@ -16,5 +16,7 @@ namespace server.Models
 
         [Required]
         public Customer Customer { get; set; }
+
+        public string CalendarId { get; set; }
     }
 }

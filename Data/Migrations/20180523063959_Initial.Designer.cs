@@ -11,8 +11,8 @@ using server.Data;
 namespace server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180522042210_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20180523063959_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -61,6 +61,8 @@ namespace server.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CalendarId");
 
                     b.Property<Guid>("CustomerId");
 

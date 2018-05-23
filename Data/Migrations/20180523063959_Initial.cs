@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace server.Data.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -69,7 +69,8 @@ namespace server.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    CustomerId = table.Column<Guid>(nullable: false)
+                    CustomerId = table.Column<Guid>(nullable: false),
+                    CalendarId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

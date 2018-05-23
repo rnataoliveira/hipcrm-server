@@ -6,6 +6,12 @@ using Google.Apis.Calendar.v3;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Auth.OAuth2.Flows;
 using Google.Apis.Auth.OAuth2.Responses;
+using server.Facades.Google;
+using server.Facades.Google.Models;
+using server.Data;
+using server.Models;
+using Refit;
+using Newtonsoft.Json.Linq;
 
 namespace server.Features.SalesPipelines
 {
@@ -14,39 +20,38 @@ namespace server.Features.SalesPipelines
         public class Command : IRequest
         {
             public Guid SaleId { get; set; }
+
+            public string AccessToken { get; set; }
         }
 
         public class Handler : AsyncRequestHandler<Command>
         {
-            protected override Task Handle(Command request)
+            readonly ICalendarApi _calendarApi;
+            readonly ApplicationDbContext _context;
+
+            public Handler(ICalendarApi calendarApi, ApplicationDbContext context)
             {
-                // var flow = new GoogleAuthorizationCodeFlow(
-                // new GoogleAuthorizationCodeFlow.Initializer
-                // {
-                //     ClientSecrets = new ClientSecrets
-                //     {
-                //         ClientId = "",
-                //         ClientSecret = ""
-                //     },
-                //     Scopes = new[] { CalendarService.Scope.Calendar }
-                // });
+                _calendarApi = calendarApi;
+                _context = context;
+            }
 
-                // var token = new TokenResponse()
-                // {
-                //     AccessToken = "",
-                //     IdToken = "",
-                //     ExpiresInSeconds = 3000
-                // };
+            protected override async Task Handle(Command request)
+            {
+                SalePipeline sale = await _context.SalesPipelines.FindAsync(request.SaleId);
 
-                // var credential = new UserCredential(flow, "renatabels", token);
-                // var initializer = new BaseClientService.Initializer
-                // {
-                //     ApplicationName = "Corretora Lopes",
-                //     HttpClientInitializer = credential
-                // };
-                // var calendarService = new CalendarService(initializer);
+                var calendar = new Calendar
+                {
+                    Summary = $"Sale: {sale.Id}",
+                    Description = $"Sale to: {sale.Customer.Id}",
+                    TimeZone = "America/Sao_Paulo"
+                };
 
-                return Task.FromResult(0);
+                Calendar newCalendar = await _calendarApi.CreateCalendar(calendar, request.AccessToken);
+
+                sale.CalendarId = newCalendar.Id;
+
+                _context.Update(sale);
+                await _context.SaveChangesAsync();
             }
         }
     }

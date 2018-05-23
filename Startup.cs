@@ -6,6 +6,10 @@ using MediatR;
 using server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Refit;
+using server.Facades.Google;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace server
 {
@@ -49,6 +53,16 @@ namespace server
         bearer.RequireHttpsMetadata = false;
         bearer.Audience = "42472227382-lv313luvu3etp0ck6vnfv67jj06kilv0.apps.googleusercontent.com";
       });
+
+      services.AddTransient<ICalendarApi>(
+        sp => RestService.For<ICalendarApi>("https://www.googleapis.com/calendar/v3",
+        new RefitSettings {
+          JsonSerializerSettings = new JsonSerializerSettings {
+            ContractResolver = new CamelCasePropertyNamesContractResolver(),
+            NullValueHandling = NullValueHandling.Ignore
+          }
+        })
+      );
 
       services
           .AddMvc()

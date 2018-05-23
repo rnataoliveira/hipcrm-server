@@ -61,6 +61,8 @@ namespace server.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("CalendarId");
+
                     b.Property<Guid>("CustomerId");
 
                     b.HasKey("Id");

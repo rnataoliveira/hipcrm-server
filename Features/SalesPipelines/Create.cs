@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using server.Data;
 using server.Models;
 using server.Shared;
@@ -12,8 +13,17 @@ namespace server.Features.SalesPipelines
     {
         public class Command : IRequest<CommandResult<Guid>>
         {
+            string _accessToken;
+
             [Required]
             public Guid? CustomerId { get; set; }
+
+            [Required]
+            public string AccessToken 
+            { 
+                get => _accessToken; 
+                set => _accessToken = $"Bearer {value}"; 
+            }
         }
 
         public class Handler : AsyncRequestHandler<Command, CommandResult<Guid>>
@@ -38,7 +48,7 @@ namespace server.Features.SalesPipelines
                 await _dbContext.AddAsync(salePipeline);
                 await _dbContext.SaveChangesAsync();
 
-                await _mediator.Publish(new Created() { SaleId = salePipeline.Id });
+                await _mediator.Publish(new Created() { SaleId = salePipeline.Id, AccessToken = createSale.AccessToken });
                 return CommandResult<Guid>.Success(salePipeline.Id);
             }
         }
@@ -46,6 +56,8 @@ namespace server.Features.SalesPipelines
         public class Created : INotification
         {
             public Guid SaleId { get; set; }
+
+            public string AccessToken { get; set; }
         }
     }
 }
