@@ -22,9 +22,17 @@ namespace server.Features.Customers
             _mediator = mediator;
         }
 
-        public async Task<IActionResult> Get([FromQuery]Search.Query search)
+        [Route("search")]
+        public async Task<IActionResult> Search([FromQuery]Search.Query search)
         {
             IEnumerable<Search.CustomerSearchResult> customers = await _mediator.Send(search);
+
+            return Ok(customers);
+        }
+
+        public async Task<IActionResult> Get([FromQuery]GetCustomers.Query query)
+        {
+            IEnumerable<Customer> customers = await _mediator.Send(query);
 
             return Ok(customers);
         }

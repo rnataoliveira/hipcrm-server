@@ -49,7 +49,7 @@ namespace server.Features.Customers
                 ) DocumentNumber
             FROM Customer C
             INNER JOIN PersonalData P ON P.Id = C.PersonalDataId
-            WHERE 
+            WHERE @Q IS NULL OR ( 
                 (
                     CONCAT(P.FirstName, ' ', P.Surname) LIKE '%' + @Q + '%' OR
                     P.CompanyName LIKE '%' + @Q + '%'
@@ -59,7 +59,7 @@ namespace server.Features.Customers
                     P.DocumentNumber = @Q OR
                     P.CompanyRegistration = @Q
                 )
-            ";
+            )";
 
       protected override async Task<IEnumerable<CustomerSearchResult>> Handle(Query request)
         => await _connection.QueryAsync<CustomerSearchResult>(sqlQuery, new { Q = request.Q });
