@@ -3,4 +3,4 @@ mono: none
 dotnet: 2.0.0
 script:
   - dotnet restore
-  - dotnet publish -c Release -o out
+  - dotnet publish -c Release -o out/server.dll
