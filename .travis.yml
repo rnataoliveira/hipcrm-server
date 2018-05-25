@@ -1,7 +1,8 @@
+language: generic
 sudo: required
 services:
   - docker
-before_install:
+after_success:
   - docker build -t hipcrm/server .
 deploy:
   provider: script
