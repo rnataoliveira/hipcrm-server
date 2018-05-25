@@ -4,7 +4,9 @@ using MediatR;
 
 namespace server.Features.SalesPipelines
 {
-    public class ProcessManager : INotificationHandler<Create.Created>
+    public class ProcessManager :
+        INotificationHandler<Create.Created>,
+        INotificationHandler<DeleteSale.Deleted>
     {
         readonly IMediator _mediator;
         public ProcessManager(IMediator mediator) =>
@@ -16,5 +18,15 @@ namespace server.Features.SalesPipelines
                 SaleId = notification.SaleId,
                 AccessToken = notification.AccessToken
             });
+
+        public async Task Handle(DeleteSale.Deleted notification, CancellationToken cancellationToken)
+        {
+            if (notification.Sale.CalendarId != null)
+                await _mediator.Send(new DeleteSaleCalendar.Command
+                {
+                    CalendarId = notification.Sale.CalendarId,
+                    AccessToken = notification.AccessToken
+                });
+        }
     }
 }

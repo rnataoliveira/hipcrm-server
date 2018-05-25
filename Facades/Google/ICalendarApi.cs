@@ -11,6 +11,9 @@ namespace server.Facades.Google
         [Get("/calendars/{calendarId}")]
         Task<Calendar> GetCalendar(string calendarId, [Header("Authorization")] string authorization);
 
+        [Delete("/calendars/{calendarId}")]
+        Task DeleteCalendar(string calendarId, [Header("Authorization")] string authorization);
+
         [Post("/calendars")]
         Task<Calendar> CreateCalendar([Body(true)] Calendar calendar, [Header("Authorization")] string authorization);
     }

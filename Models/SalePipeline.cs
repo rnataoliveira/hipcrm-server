@@ -14,6 +14,8 @@ namespace server.Models
 
         public Guid Id { get; set; } = Guid.NewGuid();
 
+        public string Code { get; set; }
+
         [Required]
         public Customer Customer { get; set; }
 

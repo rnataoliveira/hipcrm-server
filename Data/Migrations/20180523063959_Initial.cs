@@ -70,7 +70,8 @@ namespace server.Data.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     CustomerId = table.Column<Guid>(nullable: false),
-                    CalendarId = table.Column<string>(nullable: true)
+                    CalendarId = table.Column<string>(nullable: true),
+                    Code = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {

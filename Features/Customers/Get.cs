@@ -48,8 +48,6 @@ namespace server.Features.Customers
         base.PersonalData = customer.PersonalData;
       }
 
-      public string Type => this.PersonalData.GetType().Name.ToString();
-
     }
   }
 }

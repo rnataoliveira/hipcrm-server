@@ -8,6 +8,7 @@ using server.Features.SalesPipelines;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Globalization;
+using System.Collections.Generic;
 
 namespace server.Features.SalesPipelines
 {
@@ -22,6 +23,8 @@ namespace server.Features.SalesPipelines
             _mediator = mediator;
         }
 
+        [HttpPost]
+        [Route("")]
         public async Task<IActionResult> Post(
             [FromBody] Create.Command command, 
             [FromHeader] string accessToken
@@ -45,8 +48,38 @@ namespace server.Features.SalesPipelines
             return Created($"/sales-pipelines/{result.Data}", new { saleId = result.Data });
         }
 
+        [HttpDelete]
         [Route("{saleId}")]
-        public async Task<IActionResult> Get(Get.Query query)
+        public async Task<IActionResult> Delete(
+            [FromRoute] DeleteSale.Command command, 
+            [FromHeader] string accessToken
+        )
+        {
+            ModelState.Clear();
+
+            command.AccessToken = accessToken;
+
+            if (!TryValidateModel(command))
+                return BadRequest(ModelState);
+
+            var result = await _mediator.Send(command);
+            if(result.IsSuccess)
+                return NoContent();
+
+            return BadRequest();
+        }
+        
+        [Route("")]
+        [HttpGet]
+        public async Task<IActionResult> Get(GetSales.Query query) 
+        {
+            IEnumerable<Models.SalePipeline> sales = await _mediator.Send(query);
+
+            return Ok(sales);
+        }
+
+        [Route("{saleId}")]
+        public async Task<IActionResult> GetSale(Get.Query query)
         {
             CommandResult<SalePipeline> result = await _mediator.Send(query);
 
