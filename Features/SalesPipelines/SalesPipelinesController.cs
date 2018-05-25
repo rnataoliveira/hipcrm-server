@@ -71,7 +71,7 @@ namespace server.Features.SalesPipelines
         
         [Route("")]
         [HttpGet]
-        public async Task<IActionResult> Get(GetSales.Query query) 
+        public async Task<IActionResult> Get([FromQuery] GetSales.Query query) 
         {
             IEnumerable<Models.SalePipeline> sales = await _mediator.Send(query);
 
