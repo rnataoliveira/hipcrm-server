@@ -54,17 +54,24 @@ namespace server
                 bearer.Audience = "42472227382-lv313luvu3etp0ck6vnfv67jj06kilv0.apps.googleusercontent.com";
             });
 
+            var refitSettings = new RefitSettings
+            {
+                JsonSerializerSettings = new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                    NullValueHandling = NullValueHandling.Ignore
+                }
+            };
+
             services.AddTransient<ICalendarApi>(
               sp => RestService.For<ICalendarApi>("https://www.googleapis.com/calendar/v3",
-              new RefitSettings
-              {
-                  JsonSerializerSettings = new JsonSerializerSettings
-                  {
-                      ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                      NullValueHandling = NullValueHandling.Ignore
-                  }
-              })
-            );
+              refitSettings
+            ));
+
+            services.AddTransient<IDriveApi>(
+              sp => RestService.For<IDriveApi>("https://www.googleapis.com/drive/v3",
+              refitSettings
+            ));
 
             services
                 .AddMvc()

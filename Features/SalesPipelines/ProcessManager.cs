@@ -12,12 +12,22 @@ namespace server.Features.SalesPipelines
         public ProcessManager(IMediator mediator) =>
             _mediator = mediator;
 
-        public async Task Handle(Create.Created notification, CancellationToken cancellationToken) =>
-            await _mediator.Send(new CreateSaleCalendar.Command
+        public async Task Handle(Create.Created notification, CancellationToken cancellationToken)
+        {
+            var calendarCreation = _mediator.Send(new CreateSaleCalendar.Command
             {
                 SaleId = notification.SaleId,
                 AccessToken = notification.AccessToken
             });
+
+            var folderCreation = _mediator.Send(new CreateSaleFolder.Command 
+            {
+                SaleId = notification.SaleId,
+                AccessToken = notification.AccessToken
+            });
+
+            await Task.WhenAll(calendarCreation, folderCreation);
+        }
 
         public async Task Handle(DeleteSale.Deleted notification, CancellationToken cancellationToken)
         {

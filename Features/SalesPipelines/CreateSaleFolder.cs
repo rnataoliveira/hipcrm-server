@@ -15,7 +15,7 @@ using Newtonsoft.Json.Linq;
 
 namespace server.Features.SalesPipelines
 {
-    public class CreateSaleCalendar
+    public class CreateSaleFolder
     {
         public class Command : IRequest
         {
@@ -26,12 +26,12 @@ namespace server.Features.SalesPipelines
 
         public class Handler : AsyncRequestHandler<Command>
         {
-            readonly ICalendarApi _calendarApi;
+            readonly IDriveApi _driveApi;
             readonly ApplicationDbContext _context;
 
-            public Handler(ICalendarApi calendarApi, ApplicationDbContext context)
+            public Handler(IDriveApi driveApi, ApplicationDbContext context)
             {
-                _calendarApi = calendarApi;
+                _driveApi = driveApi;
                 _context = context;
             }
 
@@ -39,16 +39,14 @@ namespace server.Features.SalesPipelines
             {
                 SalePipeline sale = await _context.SalesPipelines.FindAsync(request.SaleId);
 
-                var calendar = new Calendar
+                var folderData = new File
                 {
-                    Summary = $"Sale: {sale.Code}",
-                    Description = $"Sale to: {sale.Customer.Id}",
-                    TimeZone = "America/Sao_Paulo"
+                    Name = sale.Code,
+                    MimeType = File.FolderMimeType
                 };
 
-                Calendar newCalendar = await _calendarApi.CreateCalendar(calendar, request.AccessToken);
-
-                sale.CalendarId = newCalendar.Id;
+                var folder = await _driveApi.Create(folderData, request.AccessToken);
+                sale.FolderId = folder.Id;
 
                 _context.Update(sale);
                 await _context.SaveChangesAsync();

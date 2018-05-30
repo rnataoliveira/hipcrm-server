@@ -20,5 +20,7 @@ namespace server.Models
         public Customer Customer { get; set; }
 
         public string CalendarId { get; set; }
+
+        public string FolderId { get; set; }
     }
 }

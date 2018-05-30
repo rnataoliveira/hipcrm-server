@@ -11,8 +11,8 @@ using server.Data;
 namespace server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180523063959_Initial")]
-    partial class Initial
+    [Migration("20180530014952_FolderId")]
+    partial class FolderId
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -64,7 +64,11 @@ namespace server.Data.Migrations
 
                     b.Property<string>("CalendarId");
 
+                    b.Property<string>("Code");
+
                     b.Property<Guid>("CustomerId");
+
+                    b.Property<string>("FolderId");
 
                     b.HasKey("Id");
 

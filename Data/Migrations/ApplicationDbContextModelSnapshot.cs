@@ -63,7 +63,11 @@ namespace server.Data.Migrations
 
                     b.Property<string>("CalendarId");
 
+                    b.Property<string>("Code");
+
                     b.Property<Guid>("CustomerId");
+
+                    b.Property<string>("FolderId");
 
                     b.HasKey("Id");
 
