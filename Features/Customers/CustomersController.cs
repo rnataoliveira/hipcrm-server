@@ -69,5 +69,28 @@ namespace server.Features.Customers
 
             return Created($"/customers/{result.Data}", new { customerId = result.Data });
         }
+
+        [Route("physical-person")]
+        public async Task<IActionResult> CreatePhysicalPerson(
+            [FromBody] CreatePhysicalPersonCustomer.Command command,
+            [FromHeader] string accessToken)
+        {
+            ModelState.Clear();
+
+            command.AccessToken = accessToken;
+
+            if (!TryValidateModel(command))
+                return BadRequest(ModelState);
+
+            CommandResult<Guid> result = await _mediator.Send(command);
+
+            if (!result)
+            {
+                ModelState.AddModelError("documentNumber", result.FailureReason);
+                return BadRequest(ModelState);
+            }
+
+            return Created($"/customers/{result.Data}", new { customerId = result.Data });
+        }
     }
 }
