@@ -16,6 +16,7 @@ namespace server.Models
 
         [Required]
         public string CompanyRegistration { get; set; }
+        
         public string StateRegistration { get; set; }
 
         public PhoneNumber Phone { get; set; }
@@ -80,7 +81,9 @@ namespace server.Models
 
     public class Customer
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
+
+        public CustomerStatus Status { get; set; } = CustomerStatus.Prospect;
 
         [Required]
         public PersonalData PersonalData { get; set; }
@@ -88,5 +91,11 @@ namespace server.Models
         public string Notes { get; set; }
 
         public string Type => this.PersonalData.GetType().Name.ToString();
+    }
+
+    public enum CustomerStatus 
+    {
+        Prospect,
+        Contract
     }
 }

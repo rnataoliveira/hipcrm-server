@@ -8,6 +8,7 @@ using server.Features.Customers;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections;
 using System.Collections.Generic;
+using server.Features.Customers.Create;
 
 namespace server.Features.Customers
 {
@@ -44,6 +45,29 @@ namespace server.Features.Customers
             if (customer == null)
                 return NotFound();
             return Ok(customer);
+        }
+
+        [Route("legal-person")]
+        public async Task<IActionResult> CreateLegalPerson(
+            [FromBody] CreateLegalPersonCustomer.Command command,
+            [FromHeader] string accessToken)
+        {
+            ModelState.Clear();
+
+            command.AccessToken = accessToken;
+
+            if (!TryValidateModel(command))
+                return BadRequest(ModelState);
+
+            CommandResult<Guid> result = await _mediator.Send(command);
+
+            if (!result)
+            {
+                ModelState.AddModelError("companyRegistration", result.FailureReason);
+                return BadRequest(ModelState);
+            }
+
+            return Created($"/customers/{result.Data}", new { customerId = result.Data });
         }
     }
 }

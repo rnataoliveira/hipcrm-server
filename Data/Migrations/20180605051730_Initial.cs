@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace server.Data.Migrations
 {
-    public partial class FolderId : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -50,6 +50,7 @@ namespace server.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
+                    Status = table.Column<int>(nullable: false),
                     PersonalDataId = table.Column<Guid>(nullable: false),
                     Notes = table.Column<string>(nullable: true)
                 },
@@ -97,13 +98,13 @@ namespace server.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Customer",
-                columns: new[] { "Id", "Notes", "PersonalDataId" },
-                values: new object[] { new Guid("a8c46259-ee81-4206-8ab8-134d64c01df8"), "My Fist Lady Customer!", new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3") });
+                columns: new[] { "Id", "Notes", "PersonalDataId", "Status" },
+                values: new object[] { new Guid("a8c46259-ee81-4206-8ab8-134d64c01df8"), "My Fist Lady Customer!", new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3"), 0 });
 
             migrationBuilder.InsertData(
                 table: "Customer",
-                columns: new[] { "Id", "Notes", "PersonalDataId" },
-                values: new object[] { new Guid("9c9c0642-cd86-4cee-af0c-be3cd67750f4"), "Bitch!", new Guid("9b6e2f53-2a34-4128-97f5-8056545aed76") });
+                columns: new[] { "Id", "Notes", "PersonalDataId", "Status" },
+                values: new object[] { new Guid("9c9c0642-cd86-4cee-af0c-be3cd67750f4"), "Bitch!", new Guid("9b6e2f53-2a34-4128-97f5-8056545aed76"), 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Customer_PersonalDataId",

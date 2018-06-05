@@ -11,8 +11,8 @@ using server.Data;
 namespace server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180530014952_FolderId")]
-    partial class FolderId
+    [Migration("20180605051730_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,6 +30,8 @@ namespace server.Data.Migrations
 
                     b.Property<Guid>("PersonalDataId");
 
+                    b.Property<int>("Status");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PersonalDataId");
@@ -37,8 +39,8 @@ namespace server.Data.Migrations
                     b.ToTable("Customer");
 
                     b.HasData(
-                        new { Id = new Guid("a8c46259-ee81-4206-8ab8-134d64c01df8"), Notes = "My Fist Lady Customer!", PersonalDataId = new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3") },
-                        new { Id = new Guid("9c9c0642-cd86-4cee-af0c-be3cd67750f4"), Notes = "Bitch!", PersonalDataId = new Guid("9b6e2f53-2a34-4128-97f5-8056545aed76") }
+                        new { Id = new Guid("a8c46259-ee81-4206-8ab8-134d64c01df8"), Notes = "My Fist Lady Customer!", PersonalDataId = new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3"), Status = 0 },
+                        new { Id = new Guid("9c9c0642-cd86-4cee-af0c-be3cd67750f4"), Notes = "Bitch!", PersonalDataId = new Guid("9b6e2f53-2a34-4128-97f5-8056545aed76"), Status = 0 }
                     );
                 });
 
