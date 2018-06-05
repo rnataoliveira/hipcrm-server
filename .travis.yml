@@ -1,6 +1,12 @@
-language: csharp
-mono: none
-dotnet: 2.0.0
-script:
-  - dotnet restore
-  - dotnet publish -c Release -o out/server.dll
+language: generic
+sudo: required
+services:
+  - docker
+after_success:
+  - docker build -t hipcrm/server .
+deploy:
+  provider: script
+  script: bash docker_push
+  on:
+    branch: master
+  
