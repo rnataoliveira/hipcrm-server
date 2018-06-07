@@ -37,6 +37,8 @@ namespace server.Features.Customers.Create
 
             [EmailAddress]
             public string Email { get; set; }
+
+            public string Notes { get; set; }
         }
 
         public class Handler : AsyncRequestHandler<Command, CommandResult<Guid>>
@@ -57,7 +59,10 @@ namespace server.Features.Customers.Create
                     return CommandResult<Guid>.Fail($"A Customer with this Company Registration number already exists.");
 
                 //Intanciar um novo customer
-                var customer = new Customer();
+                var customer = new Customer
+                {
+                    Notes = command.Notes
+                };
 
                 // Instanciar LegalPerson Data
                 var personalData = new LegalPerson
@@ -75,7 +80,7 @@ namespace server.Features.Customers.Create
 
                 // Adicionar o customer no database
                 await _dbContext.Customers.AddAsync(customer);
-                
+
                 // Notificar sobre a criação do customer
                 await _mediator.Publish(new Created { CustomerId = customer.Id, AccessToken = command.AccessToken });
 

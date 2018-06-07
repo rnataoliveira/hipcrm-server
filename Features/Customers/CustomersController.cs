@@ -39,6 +39,7 @@ namespace server.Features.Customers
         }
 
         [Route("{customerId}")]
+        [HttpGet]
         public async Task<IActionResult> GetById([FromRoute]Get.Query query)
         {
             var customer = await _mediator.Send(query);
@@ -91,6 +92,27 @@ namespace server.Features.Customers
             }
 
             return Created($"/customers/{result.Data}", new { customerId = result.Data });
+        }
+
+        [HttpDelete]
+        [Route("{customerId}")]
+        public async Task<IActionResult> Delete(
+            [FromRoute] DeleteCustomer.Command command, 
+            [FromHeader] string accessToken
+        )
+        {
+            ModelState.Clear();
+
+            command.AccessToken = accessToken;
+
+            if (!TryValidateModel(command))
+                return BadRequest(ModelState);
+
+            var result = await _mediator.Send(command);
+            if(result.IsSuccess)
+                return NoContent();
+
+            return BadRequest();
         }
     }
 }
