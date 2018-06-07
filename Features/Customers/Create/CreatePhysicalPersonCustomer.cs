@@ -46,10 +46,13 @@ namespace server.Features.Customers.Create
             public PhoneNumber Phone { get; set; }
 
             public PhoneNumber CellPhone { get; set; }
-            
+
             [EmailAddress]
             public string Email { get; set; }
 
+            public Address Address { get; set; }
+
+            public string Notes { get; set; }
         }
 
         public class Handler : AsyncRequestHandler<Command, CommandResult<Guid>>
@@ -70,7 +73,10 @@ namespace server.Features.Customers.Create
                     return CommandResult<Guid>.Fail($"A Customer with this Document Number already exists.");
 
                 //Intanciar um novo customer
-                var customer = new Customer();
+                var customer = new Customer
+                {
+                    Notes = command.Notes
+                };
 
                 // Instanciar LegalPerson Data
                 var personalData = new PhysicalPerson
@@ -84,7 +90,8 @@ namespace server.Features.Customers.Create
                     MaritalState = command.MaritalState,
                     Phone = command.Phone,
                     CellPhone = command.CellPhone,
-                    Email = command.Email
+                    Email = command.Email,
+                    Address = command.Address
                 };
 
                 // Associar os dados pessoais ao novo customer
