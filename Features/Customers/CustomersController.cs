@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Collections;
 using System.Collections.Generic;
 using server.Features.Customers.Create;
+using server.Features.Customers.Update;
 
 namespace server.Features.Customers
 {
@@ -49,6 +50,7 @@ namespace server.Features.Customers
         }
 
         [Route("legal-person")]
+        [HttpPost]
         public async Task<IActionResult> CreateLegalPerson(
             [FromBody] CreateLegalPersonCustomer.Command command,
             [FromHeader] string accessToken)
@@ -72,6 +74,7 @@ namespace server.Features.Customers
         }
 
         [Route("physical-person")]
+        [HttpPost]
         public async Task<IActionResult> CreatePhysicalPerson(
             [FromBody] CreatePhysicalPersonCustomer.Command command,
             [FromHeader] string accessToken)
@@ -92,6 +95,56 @@ namespace server.Features.Customers
             }
 
             return Created($"/customers/{result.Data}", new { customerId = result.Data });
+        }
+
+        [Route("physical-person")]
+        [HttpPut]
+        public async Task<IActionResult> UpdatePhysicalPerson(
+            [FromBody] UpdatePhysicalPersonCustomer.Command command,
+            [FromHeader] string accessToken
+        ) 
+        {
+            ModelState.Clear();
+
+            command.AccessToken = accessToken;
+
+            if (!TryValidateModel(command))
+                return BadRequest(ModelState);
+
+            CommandResult<Customer> result = await _mediator.Send(command);
+
+            if (!result)
+            {
+                ModelState.AddModelError("customer", result.FailureReason);
+                return BadRequest(ModelState);
+            }
+
+            return Ok(result.Data);
+        }
+
+        [Route("legal-person")]
+        [HttpPut]
+        public async Task<IActionResult> UpdateLegalPerson(
+            [FromBody] UpdateLegalPersonCustomer.Command command,
+            [FromHeader] string accessToken
+        ) 
+        {
+            ModelState.Clear();
+
+            command.AccessToken = accessToken;
+
+            if (!TryValidateModel(command))
+                return BadRequest(ModelState);
+
+            CommandResult<Customer> result = await _mediator.Send(command);
+
+            if (!result)
+            {
+                ModelState.AddModelError("customer", result.FailureReason);
+                return BadRequest(ModelState);
+            }
+
+            return Ok(result.Data);
         }
 
         [HttpDelete]

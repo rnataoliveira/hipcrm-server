@@ -110,12 +110,5 @@ namespace server.Features.Customers.Create
                 return CommandResult<Guid>.Success(customer.Id);
             }
         }
-
-        public class Created : INotification
-        {
-            public Guid CustomerId { get; set; }
-
-            public string AccessToken { get; set; }
-        }
     }
 }
