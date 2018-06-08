@@ -25,7 +25,7 @@ namespace server.Features.SalesPipelines.Agreement
 
         [Route("{saleId}/agreement/legal-person")]
         [HttpPost]
-        public async Task<IActionResult> SavaAgreementLegalPerson(
+        public async Task<IActionResult> SaveAgreementLegalPerson(
             [FromBody] SaveAgreementLegalPerson.Command command,
             [FromRoute] Guid saleId,
             [FromHeader] string accessToken)

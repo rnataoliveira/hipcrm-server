@@ -1,12 +1,15 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using server.Features.SalesPipelines.Agreement;
+using server.Models;
 
 namespace server.Features.SalesPipelines
 {
     public class ProcessManager :
         INotificationHandler<Create.Created>,
-        INotificationHandler<DeleteSale.Deleted>
+        INotificationHandler<DeleteSale.Deleted>,
+        INotificationHandler<Agreement.Created>
     {
         readonly IMediator _mediator;
         public ProcessManager(IMediator mediator) =>
@@ -20,7 +23,7 @@ namespace server.Features.SalesPipelines
                 AccessToken = notification.AccessToken
             });
 
-            var folderCreation = _mediator.Send(new CreateSaleFolder.Command 
+            var folderCreation = _mediator.Send(new CreateSaleFolder.Command
             {
                 SaleId = notification.SaleId,
                 AccessToken = notification.AccessToken
@@ -37,6 +40,15 @@ namespace server.Features.SalesPipelines
                     CalendarId = notification.Sale.CalendarId,
                     AccessToken = notification.AccessToken
                 });
+        }
+
+        public async Task Handle(Created notification, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(new UpdateStage.Command
+            {
+                SaleId = notification.SaleId,
+                Stage = SaleStage.Agreement
+            });
         }
     }
 }

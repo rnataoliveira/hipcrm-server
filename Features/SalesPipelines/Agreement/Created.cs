@@ -12,6 +12,8 @@ namespace server.Features.SalesPipelines.Agreement
 {
     public class Created : INotification
     {
+        public Guid SaleId { get; set; }
+
         public Guid AgreementId { get; set; }
 
         public string AccessToken { get; set; }

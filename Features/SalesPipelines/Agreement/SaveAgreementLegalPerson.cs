@@ -50,7 +50,7 @@ namespace server.Features.SalesPipelines.Agreement
             public ICollection<Beneficiary> Beneficiaries { get; set; } = new Collection<Beneficiary>();
 
             [Required]
-            public Modality Modality { get; set; }
+            public Modality? Modality { get; set; }
 
             [Required]
             public DentalCare DentalCare { get; set; }
@@ -71,7 +71,10 @@ namespace server.Features.SalesPipelines.Agreement
             {
                 SalePipeline sale = _dbContext.SalesPipelines.FirstOrDefault(c => c.Id == command.SaleId);
                 if (sale == null)
-                    return CommandResult<LegalPersonAgreement>.Fail("Sale not found");
+                    return CommandResult<LegalPersonAgreement>.Fail("Venda não encontrada!");
+
+                if (sale.Stage != SaleStage.Proposal)
+                    return CommandResult<LegalPersonAgreement>.Fail("Não é possivel criar um contato para esta venda!");
 
                 LegalPersonAgreement agreement = new LegalPersonAgreement
                 {
@@ -83,17 +86,22 @@ namespace server.Features.SalesPipelines.Agreement
                     Email = command.Email,
                     Contact = command.Contact,
                     MailingAddress = command.MailingAddress,
-                    Modality = command.Modality,
+                    Modality = command.Modality.Value,
                     DentalCare = command.DentalCare,
                     Beneficiaries = command.Beneficiaries
                 };
 
-                // await _dbContext.LegalPersonAgreements.AddAsync(agreement);
-                // await _mediator.Publish(new Created { AgreementId = agreement.Id });
-                // await _dbContext.SaveChangesAsync();
+                await _dbContext.LegalPersonAgreements.AddAsync(agreement);
+                await _mediator.Publish(new Created
+                {
+                    AgreementId = agreement.Id,
+                    SaleId = sale.Id,
+                    AccessToken = command.AccessToken
+                });
 
-                // return CommandResult<LegalPersonAgreement>.Success(agreement);
-                return CommandResult<LegalPersonAgreement>.Fail("Fail!");
+                await _dbContext.SaveChangesAsync();
+
+                return CommandResult<LegalPersonAgreement>.Success(agreement);
             }
         }
     }

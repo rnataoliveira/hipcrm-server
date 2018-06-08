@@ -24,8 +24,10 @@ namespace server.Models
 
         public int Id { get; set; }
 
+        [Required]
         public string Number { get; set; }
 
+        [Required]
         public string Plan { get; set; }
     }
 
@@ -39,6 +41,7 @@ namespace server.Models
     {
         public bool Has => string.IsNullOrEmpty(Plan);
 
+        [Required]
         public string Plan { get; set; }
     }
 
