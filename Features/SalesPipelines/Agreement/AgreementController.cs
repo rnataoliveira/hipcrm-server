@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 namespace server.Features.SalesPipelines.Agreement
 {
-    [Route("sales-pipelines/{saleId}/agreement")]
+    [Route("sales-pipelines")]
     [Authorize]
     public class AgreementController : Controller
     {
@@ -23,22 +23,26 @@ namespace server.Features.SalesPipelines.Agreement
             _mediator = mediator;
         }
 
-        [Route("legal-person")]
+        [Route("{saleId}/agreement/legal-person")]
         [HttpPost]
         public async Task<IActionResult> SavaAgreementLegalPerson(
-            [FromBody] SavaAgreementLegalPerson.Command command,
+            [FromBody] SaveAgreementLegalPerson.Command command,
+            [FromRoute] Guid saleId,
             [FromHeader] string accessToken)
         {
             ModelState.Clear();
 
             command.AccessToken = accessToken;
+            command.SaleId = saleId;
 
             if (!TryValidateModel(command))
                 return BadRequest(ModelState);
 
-            CommandResult<Guid> result = await _mediator.Send(command);
+            CommandResult<LegalPersonAgreement> result = await _mediator.Send(command);
+            if(!result.IsSuccess)
+                return BadRequest(result.FailureReason);
 
-            return Created($"/sales-pipelines/{command.SaleId}/agreement", new { agreementId = result.Data });
+            return Created($"/sales-pipelines/{command.SaleId}/agreement", result.Data);
         }
 
         [Route("physical-person")]

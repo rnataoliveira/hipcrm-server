@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace server.Models
 {
@@ -43,15 +44,21 @@ namespace server.Models
 
     public class PaymentInfo
     {
+        [Required]
+        [Range(1, int.MaxValue)]
         public decimal EntranceFee { get; set; }
 
+        [Required]
+        [Range(1, int.MaxValue)]
         public decimal TotalValue { get; set; }
 
+        [Required]
+        [Range(1, int.MaxValue)]
         public int InstallmentsCount { get; set; }
 
-        public decimal InstallmentValue => (TotalValue - EntranceFee) / InstallmentsCount;
+        public decimal InstallmentValue => InstallmentsCount > 0 ? (TotalValue - EntranceFee) / InstallmentsCount : 0;
 
-        public decimal Comission { get; set; }
+        public decimal Comission { get; set; } = 0;
     }
 
     public class LegalPersonAgreement : Agreement
