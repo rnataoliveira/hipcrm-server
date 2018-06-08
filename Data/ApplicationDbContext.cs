@@ -13,6 +13,8 @@ namespace server.Data
         public DbSet<LegalPerson> LegalPersonsData { get; set; }
         public DbSet<PhysicalPerson> PhysicalsPersonsData { get; set; }
         public DbSet<SalePipeline> SalesPipelines { get; set; }
+        public DbSet<Agreement> Agreements { get; set; }
+        public DbSet<LegalPersonAgreement> LegalPersonAgreements { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -41,6 +43,23 @@ namespace server.Data
 
             modelBuilder.Entity<SalePipeline>().ToTable("SalesPipeline");
 
+            modelBuilder.Entity<Agreement>(builder =>
+            {
+                builder.OwnsOne(a => a.Payment);
+                builder.HasOne(a => a.Sale);
+                builder.ToTable("Agreement");
+            });
+
+            modelBuilder.Entity<LegalPersonAgreement>(builder =>
+            {
+                builder.OwnsOne(l => l.MailingAddress);
+                builder.OwnsOne(l => l.Phone);
+                builder.OwnsOne(l => l.DentalCare);
+
+                builder.HasMany(l => l.Beneficiaries)
+                    .WithOne(b => b.Agreement);
+            });
+
             modelBuilder.Entity<PhysicalPerson>(builder =>
             {
                 builder.OwnsOne(x => x.CellPhone);
@@ -54,7 +73,7 @@ namespace server.Data
             });
 
             modelBuilder.Entity<LegalPerson>(builder =>
-            {   
+            {
                 builder.OwnsOne(x => x.Phone);
                 builder.OwnsOne(x => x.Address);
             });
@@ -98,6 +117,34 @@ namespace server.Data
 
                  if (entry.Reference(nameof(PhysicalPerson.CellPhone)).CurrentValue == null)
                      entry.Reference(nameof(PhysicalPerson.CellPhone)).CurrentValue = new PhoneNumber();
+             });
+
+             ChangeTracker.Entries()
+             .Where(entry =>
+               entry.Entity is Agreement &&
+               entry.State == EntityState.Added)
+             .ToList()
+             .ForEach(entry =>
+             {
+                 if (entry.Reference(nameof(Agreement.Payment)).CurrentValue == null)
+                     entry.Reference(nameof(Agreement.Payment)).CurrentValue = new PaymentInfo();
+             });
+
+             ChangeTracker.Entries()
+             .Where(entry =>
+               entry.Entity is LegalPersonAgreement &&
+               entry.State == EntityState.Added)
+             .ToList()
+             .ForEach(entry =>
+             {
+                 if (entry.Reference(nameof(LegalPersonAgreement.Phone)).CurrentValue == null)
+                     entry.Reference(nameof(LegalPersonAgreement.Phone)).CurrentValue = new PhoneNumber();
+
+                if (entry.Reference(nameof(LegalPersonAgreement.MailingAddress)).CurrentValue == null)
+                     entry.Reference(nameof(LegalPersonAgreement.MailingAddress)).CurrentValue = new Address();
+
+                if (entry.Reference(nameof(LegalPersonAgreement.DentalCare)).CurrentValue == null)
+                     entry.Reference(nameof(LegalPersonAgreement.DentalCare)).CurrentValue = new DentalCare();
              });
 
             return await base.SaveChangesAsync(cancellationToken);

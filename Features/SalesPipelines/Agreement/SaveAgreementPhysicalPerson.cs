@@ -29,35 +29,6 @@ namespace server.Features.SalesPipelines.Agreement
                 get => _accessToken;
                 set => _accessToken = $"Bearer {value}";
             }
-
-            public string contractNumber { get; set; }
-
-            public string Plan { get; set; }
-
-            public PhoneNumber phone { get; set; }
-
-            [EmailAddress]
-            public string Email { get; set; }
-
-            public string companyContact { get; set; }
-
-            public Address Address { get; set; } //O endereço do contrato possui referencia também
-
-            public Dependents Dependents { get; set; }
-
-            public double Comission { get; set; }
-
-            public double TotalValue { get; set; }
-
-            public double EntranceFee { get; set; }
-
-            public double InstallmentAmount { get; set; }
-
-            public double TotalValue { get; set; }
-
-            public double AmountValue => (this.totalValue - this.entranceFee) / this.installmentAmount;
-
-            public string Notes { get; set; }
         }
 
         public class Handler : AsyncRequestHandler<Command, CommandResult<Guid>>
@@ -73,7 +44,7 @@ namespace server.Features.SalesPipelines.Agreement
 
             protected async override Task<CommandResult<Guid>> Handle(Command saveAgreementPhysicalPerson)
             {
-                return NotImplementedException()
+                throw new NotImplementedException();
             }
         }
     }

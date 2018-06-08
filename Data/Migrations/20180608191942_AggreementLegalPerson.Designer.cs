@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using server.Data;
 
 namespace server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180608191942_AggreementLegalPerson")]
+    partial class AggreementLegalPerson
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,7 +23,7 @@ namespace server.Data.Migrations
 
             modelBuilder.Entity("server.Models.Agreement", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("AgreementId")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Discriminator")
@@ -33,7 +35,7 @@ namespace server.Data.Migrations
 
                     b.Property<Guid?>("SaleId");
 
-                    b.HasKey("Id");
+                    b.HasKey("AgreementId");
 
                     b.HasIndex("SaleId");
 
@@ -264,7 +266,7 @@ namespace server.Data.Migrations
                 {
                     b.OwnsOne("server.Models.DentalCare", "DentalCare", b1 =>
                         {
-                            b1.Property<Guid?>("LegalPersonAgreementId");
+                            b1.Property<Guid?>("LegalPersonAgreementAgreementId");
 
                             b1.Property<string>("Plan");
 
@@ -272,13 +274,13 @@ namespace server.Data.Migrations
 
                             b1.HasOne("server.Models.LegalPersonAgreement")
                                 .WithOne("DentalCare")
-                                .HasForeignKey("server.Models.DentalCare", "LegalPersonAgreementId")
+                                .HasForeignKey("server.Models.DentalCare", "LegalPersonAgreementAgreementId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
                     b.OwnsOne("server.Models.Address", "MailingAddress", b1 =>
                         {
-                            b1.Property<Guid>("LegalPersonAgreementId");
+                            b1.Property<Guid>("LegalPersonAgreementAgreementId");
 
                             b1.Property<string>("City");
 
@@ -298,13 +300,13 @@ namespace server.Data.Migrations
 
                             b1.HasOne("server.Models.LegalPersonAgreement")
                                 .WithOne("MailingAddress")
-                                .HasForeignKey("server.Models.Address", "LegalPersonAgreementId")
+                                .HasForeignKey("server.Models.Address", "LegalPersonAgreementAgreementId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
 
                     b.OwnsOne("server.Models.PhoneNumber", "Phone", b1 =>
                         {
-                            b1.Property<Guid>("LegalPersonAgreementId");
+                            b1.Property<Guid>("LegalPersonAgreementAgreementId");
 
                             b1.Property<string>("AreaCode");
 
@@ -314,7 +316,7 @@ namespace server.Data.Migrations
 
                             b1.HasOne("server.Models.LegalPersonAgreement")
                                 .WithOne("Phone")
-                                .HasForeignKey("server.Models.PhoneNumber", "LegalPersonAgreementId")
+                                .HasForeignKey("server.Models.PhoneNumber", "LegalPersonAgreementAgreementId")
                                 .OnDelete(DeleteBehavior.Cascade);
                         });
                 });

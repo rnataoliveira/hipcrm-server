@@ -38,7 +38,7 @@ namespace server.Features.SalesPipelines.Agreement
 
             CommandResult<Guid> result = await _mediator.Send(command);
 
-            return Saved($"/sales-pipelines/{saleId}/agreement/legal-person/{result.Data}", new { agreementId = result.Data });
+            return Created($"/sales-pipelines/{command.SaleId}/agreement", new { agreementId = result.Data });
         }
 
         [Route("physical-person")]
@@ -56,8 +56,7 @@ namespace server.Features.SalesPipelines.Agreement
 
             CommandResult<Guid> result = await _mediator.Send(command);
 
-            return Saved($"/sales-pipelines/{saleId}/agreement/legal-person/{result.Data}", new { agreementId = result.Data });
+            return Created($"/sales-pipelines/{command.SaleId}/agreement", new {});
         }
-
     }
 }
