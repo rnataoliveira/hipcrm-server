@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace server.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -73,7 +72,8 @@ namespace server.Data.Migrations
                     Code = table.Column<string>(nullable: true),
                     CustomerId = table.Column<Guid>(nullable: false),
                     CalendarId = table.Column<string>(nullable: true),
-                    FolderId = table.Column<string>(nullable: true)
+                    FolderId = table.Column<string>(nullable: true),
+                    Stage = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -85,26 +85,6 @@ namespace server.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.InsertData(
-                table: "PersonalData",
-                columns: new[] { "Id", "Discriminator", "BirthDate", "DocumentNumber", "PhysicalPerson_Email", "FirstName", "GeneralRegistration", "MaritalState", "Sex", "Surname", "Address_City", "Address_Complement", "Address_Neighborhood", "Address_Number", "Address_State", "Address_Street", "Address_ZipCode", "CellPhone_AreaCode", "CellPhone_Number", "PhoneNumber_Phone_AreaCode", "PhoneNumber_Phone_Number" },
-                values: new object[] { new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3"), "PhysicalPerson", new DateTime(1994, 6, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), "01046387294", "renatatest@gmail.com", "Renata", "", "Engaged", "F", "Oliveira", "San Junipero", "End of Street", "Junipero Coast", "99", "VR", "1st", "05037001", "11", "959463856", "11", "954546666" });
-
-            migrationBuilder.InsertData(
-                table: "PersonalData",
-                columns: new[] { "Id", "Discriminator", "CompanyName", "CompanyRegistration", "Email", "StateRegistration", "Address_City", "Address_Complement", "Address_Neighborhood", "Address_Number", "Address_State", "Address_Street", "Address_ZipCode", "Phone_AreaCode", "Phone_Number" },
-                values: new object[] { new Guid("9b6e2f53-2a34-4128-97f5-8056545aed76"), "LegalPerson", "Lopes Corretora", "120.239.123/0001", "lopes@hotmail.com", "123456789-10", "Jão Pietro", "White House", "St Coast", "300", "KL", "2st", "02089111", "11", "3535-2058" });
-
-            migrationBuilder.InsertData(
-                table: "Customer",
-                columns: new[] { "Id", "Notes", "PersonalDataId", "Status" },
-                values: new object[] { new Guid("a8c46259-ee81-4206-8ab8-134d64c01df8"), "My Fist Lady Customer!", new Guid("cd9fbd0d-aecd-4a8e-b924-37be674709e3"), 0 });
-
-            migrationBuilder.InsertData(
-                table: "Customer",
-                columns: new[] { "Id", "Notes", "PersonalDataId", "Status" },
-                values: new object[] { new Guid("9c9c0642-cd86-4cee-af0c-be3cd67750f4"), "Bitch!", new Guid("9b6e2f53-2a34-4128-97f5-8056545aed76"), 0 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Customer_PersonalDataId",
