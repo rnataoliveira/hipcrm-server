@@ -12,7 +12,6 @@ using System.Collections.Generic;
 
 namespace server.Features.SalesPipelines.Agreement
 {
-    [Route("sales-pipelines")]
     [Authorize]
     public class AgreementController : Controller
     {
@@ -23,7 +22,27 @@ namespace server.Features.SalesPipelines.Agreement
             _mediator = mediator;
         }
 
-        [Route("{saleId}/agreement/legal-person")]
+        [Route("agreements/{agreementId}")]
+        [HttpGet]
+        public async Task<IActionResult> GetAgreement(Agreement.GetAgreement.Query query) 
+        {
+            CommandResult<Models.Agreement> result = await _mediator.Send(query);
+
+            if(result) return Ok(result.Data);
+
+            return NotFound();
+        }
+
+        [Route("agreements")]
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] GetAgreements.Query query) 
+        {
+            IEnumerable<Models.Agreement> agreements = await _mediator.Send(query);
+
+            return Ok(agreements);
+        }
+
+        [Route("sales-pipelines/{saleId}/agreement/legal-person")]
         [HttpPost]
         public async Task<IActionResult> SaveAgreementLegalPerson(
             [FromBody] SaveAgreementLegalPerson.Command command,
@@ -38,14 +57,14 @@ namespace server.Features.SalesPipelines.Agreement
             if (!TryValidateModel(command))
                 return BadRequest(ModelState);
 
-            CommandResult<LegalPersonAgreement> result = await _mediator.Send(command);
+            CommandResult<Models.Agreement> result = await _mediator.Send(command);
             if(!result.IsSuccess)
                 return BadRequest(result.FailureReason);
 
             return Created($"/sales-pipelines/{command.SaleId}/agreement", result.Data);
         }
 
-        [Route("physical-person")]
+        [Route("sales-pipelines/{saleId}/agreement/physical-person")]
         [HttpPost]
         public async Task<IActionResult> SaveAgreementPhysicalPerson(
             [FromBody] SavaAgreementPhysicalPerson.Command command,

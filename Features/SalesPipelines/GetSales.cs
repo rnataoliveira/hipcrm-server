@@ -32,7 +32,9 @@ namespace server.Features.SalesPipelines
                 IEnumerable<SalePipeline> sales = await _context.SalesPipelines
                     .Include(sale => sale.Customer)
                     .ThenInclude(customer => customer.PersonalData)
-                    .Where(sale => (string.IsNullOrEmpty(request.Q) || sale.Code == request.Q))
+                    .Where(sale => 
+                        sale.Stage == SaleStage.Proposal && 
+                        (string.IsNullOrEmpty(request.Q) || sale.Code == request.Q))
                     .ToListAsync();
 
                 return sales;

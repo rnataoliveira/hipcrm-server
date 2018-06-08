@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace server.Models
 {
@@ -16,10 +17,13 @@ namespace server.Models
         public string Notes { get; set; }
 
         public PaymentInfo Payment { get; set; }
+
+        public AgreementData PersonalData { get; set; }
     }
 
     public class Beneficiary
     {
+        [JsonIgnore]
         public LegalPersonAgreement Agreement { get; set; }
 
         public int Id { get; set; }
@@ -39,7 +43,7 @@ namespace server.Models
 
     public class DentalCare
     {
-        public bool Has => string.IsNullOrEmpty(Plan);
+        public bool Has => !string.IsNullOrEmpty(Plan);
 
         [Required]
         public string Plan { get; set; }
@@ -64,7 +68,12 @@ namespace server.Models
         public decimal Comission { get; set; } = 0;
     }
 
-    public class LegalPersonAgreement : Agreement
+    public abstract class AgreementData
+    {
+        public Guid Id { get; set; }
+    }
+
+    public class LegalPersonAgreement : AgreementData
     {
         public PhoneNumber Phone { get; set; }
 

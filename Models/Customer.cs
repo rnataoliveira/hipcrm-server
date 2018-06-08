@@ -14,7 +14,7 @@ namespace server.Models
 
         public string Notes { get; set; }
 
-        public string Type => this.PersonalData.GetType().Name.ToString();
+        public string Type => PersonalData.GetType().Name.ToString();
     }
 
     public enum CustomerStatus 

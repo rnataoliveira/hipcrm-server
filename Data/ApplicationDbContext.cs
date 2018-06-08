@@ -47,8 +47,11 @@ namespace server.Data
             {
                 builder.OwnsOne(a => a.Payment);
                 builder.HasOne(a => a.Sale);
+                builder.HasOne(a => a.PersonalData);
                 builder.ToTable("Agreement");
             });
+            
+            modelBuilder.Entity<AgreementData>().ToTable("AgreementData");
 
             modelBuilder.Entity<LegalPersonAgreement>(builder =>
             {
