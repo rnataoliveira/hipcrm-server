@@ -22,5 +22,14 @@ namespace server.Models
         public string CalendarId { get; set; }
 
         public string FolderId { get; set; }
+
+        public SaleStage Stage { get; set; } = SaleStage.Proposal;
+    }
+
+    public enum SaleStage 
+    {
+        Proposal = 0,
+        Agreement = 1,
+        Archived = 2
     }
 }
