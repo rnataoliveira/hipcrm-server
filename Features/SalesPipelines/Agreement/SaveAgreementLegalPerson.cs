@@ -74,7 +74,7 @@ namespace server.Features.SalesPipelines.Agreement
                     return CommandResult<Models.Agreement>.Fail("Venda não encontrada!");
 
                 if (sale.Stage != SaleStage.Proposal)
-                    return CommandResult<Models.Agreement>.Fail("Não é possivel criar um contato para esta venda!");
+                    return CommandResult<Models.Agreement>.Fail("Não é possivel criar um contrato para esta venda!");
 
                 LegalPersonAgreement personalData = new LegalPersonAgreement
                 {
