@@ -31,6 +31,8 @@ namespace server.Features.SalesPipelines
             {
                 IEnumerable<Models.Agreement> agreements = await _context.Agreements
                     .Include(a => a.Sale)
+                    .ThenInclude(c => c.Customer)
+                    .ThenInclude(c => c.PersonalData)
                     .Include(a => a.PersonalData)
                     .Where(a => a.Sale.Stage != SaleStage.Proposal)
                     .ToListAsync();
