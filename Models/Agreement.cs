@@ -110,7 +110,8 @@ namespace server.Models
 
         public string GeneralRegistration { get; set; }
 
-        public DateTime BirthDate { get; set; }
+        [Required]
+        public DateTime? BirthDate { get; set; }
 
         public string MothersName { get; set; }
 

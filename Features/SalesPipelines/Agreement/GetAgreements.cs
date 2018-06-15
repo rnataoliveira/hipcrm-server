@@ -35,6 +35,7 @@ namespace server.Features.SalesPipelines
                     .ThenInclude(c => c.PersonalData)
                     .Include(a => a.PersonalData)
                     .Where(a => a.Sale.Stage != SaleStage.Proposal)
+                    .Where(a => string.IsNullOrEmpty(request.Q) || (a.Number == request.Q || a.Sale.Code == request.Q))
                     .ToListAsync();
 
                 return agreements;

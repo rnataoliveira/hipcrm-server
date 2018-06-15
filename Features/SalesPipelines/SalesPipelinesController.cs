@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Globalization;
 using System.Collections.Generic;
+using server.Facades.Google.Models;
 
 namespace server.Features.SalesPipelines
 {
@@ -90,7 +91,7 @@ namespace server.Features.SalesPipelines
         }
 
         [Route("{saleId}/appointments")]
-        public async Task<IActionResult> GetAppointments(GetAppointments.Query query) 
+        public async Task<IActionResult> GetSaleAppointments(GetAppointments.Query query) 
         {
             CommandResult result = await _mediator.Send(query);
 
@@ -98,6 +99,18 @@ namespace server.Features.SalesPipelines
                 return Ok();
 
             return NotFound();
+        }
+
+        [Route("appointments")]
+        public async Task<IActionResult> GetAppointments(
+            GetAllAppointments.Query query,
+            [FromHeader] string accessToken)
+        {
+            query.AccessToken = accessToken;
+
+            IEnumerable<Event> appointments = await _mediator.Send(query);
+
+            return Ok(appointments);
         }
     }
 }
