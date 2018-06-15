@@ -33,8 +33,9 @@ namespace server.Features.SalesPipelines.Agreement
                     .ThenInclude(s => s.Customer)
                     .ThenInclude(c => c.PersonalData)
                     .Include(a => a.PersonalData)
+                    .ThenInclude(a => (a as PhysicalPersonAgreement).Dependents)
+                    .Include(a => a.PersonalData)
                     .ThenInclude(a => (a as LegalPersonAgreement).Beneficiaries)
-                    // .ThenInclude(a => (a as PhysicalPersonAgreement))
                     .FirstOrDefaultAsync(a => a.Id == request.AgreementId);
 
                 if(agreement == null)

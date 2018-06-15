@@ -63,6 +63,11 @@ namespace server.Data
                     .WithOne(b => b.Agreement);
             });
 
+            modelBuilder.Entity<PhysicalPersonAgreement>(builder => {
+                builder.HasMany(p => p.Dependents)
+                    .WithOne(d => d.Agreement);
+            });
+
             modelBuilder.Entity<PhysicalPerson>(builder =>
             {
                 builder.OwnsOne(x => x.CellPhone);

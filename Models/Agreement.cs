@@ -89,4 +89,34 @@ namespace server.Models
 
         public DentalCare DentalCare { get; set; }
     }
+
+    public class PhysicalPersonAgreement : AgreementData
+    {
+        public string Plan { get; set; }
+
+        public ICollection<Dependent> Dependents { get; set; } = new Collection<Dependent>();
+    }
+
+    public class Dependent
+    {
+        [JsonIgnore]
+        public PhysicalPersonAgreement Agreement { get; set; }
+
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string DocumentNumber { get; set; }
+
+        public string GeneralRegistration { get; set; }
+
+        public DateTime BirthDate { get; set; }
+
+        public string MothersName { get; set; }
+
+        public string MaritalState { get; set; }
+
+        public string Relationship { get; set; }
+
+    }
 }
