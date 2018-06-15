@@ -6,7 +6,7 @@ RUN dotnet restore
 COPY . ./
 RUN dotnet publish -c Release
 
-FROM microsoft/aspnetcore:2.1
+FROM microsoft/aspnetcore
 WORKDIR /app
 COPY --from=build-env /app/bin/Release/netcoreapp2.1/* ./
 ENTRYPOINT ["dotnet", "server.dll"]
