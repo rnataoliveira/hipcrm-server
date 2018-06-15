@@ -41,13 +41,20 @@ namespace server.Features.SalesPipelines
             {
                 IEnumerable<string> calendarIds = _context.SalesPipelines
                     .Where(s => s.Stage == SaleStage.Proposal)
-                    .Select(s => s.CalendarId);
+                    .Select(s => s.CalendarId).ToList();
 
                 var events = new List<Event>();
                 foreach (var calendarId in calendarIds)
                 {
-                    CalendarEvents calendarEvents = await _calendarApi.GetEvents(calendarId, request.AccessToken);
-                    events.AddRange(calendarEvents.Items);
+                    try
+                    {
+                        CalendarEvents calendarEvents = await _calendarApi.GetEvents(calendarId, request.AccessToken);
+                        events.AddRange(calendarEvents.Items);
+                    }
+                    catch (Refit.ApiException)
+                    {
+                        continue;
+                    }
                 }
 
                 return events;
