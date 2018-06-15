@@ -42,7 +42,7 @@ namespace server.Features.SalesPipelines
                 });
         }
 
-        public async Task Handle(Created notification, CancellationToken cancellationToken)
+        public async Task Handle(Agreement.Created notification, CancellationToken cancellationToken)
         {
             await _mediator.Send(new UpdateStage.Command
             {

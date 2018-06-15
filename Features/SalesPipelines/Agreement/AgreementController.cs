@@ -61,25 +61,29 @@ namespace server.Features.SalesPipelines.Agreement
             if(!result.IsSuccess)
                 return BadRequest(result.FailureReason);
 
-            return Created($"/sales-pipelines/{command.SaleId}/agreement", result.Data);
+            return Created($"/agreements/{result.Data.Id}", result.Data);
         }
 
         [Route("sales-pipelines/{saleId}/agreement/physical-person")]
         [HttpPost]
         public async Task<IActionResult> SaveAgreementPhysicalPerson(
-            [FromBody] SavaAgreementPhysicalPerson.Command command,
+            [FromBody] SaveAgreementPhysicalPerson.Command command,
+            [FromRoute] Guid saleId,
             [FromHeader] string accessToken)
         {
             ModelState.Clear();
 
             command.AccessToken = accessToken;
+            command.SaleId = saleId;
 
             if (!TryValidateModel(command))
                 return BadRequest(ModelState);
 
-            CommandResult<Guid> result = await _mediator.Send(command);
+            CommandResult<Models.Agreement> result = await _mediator.Send(command);
+            if(!result.IsSuccess)
+                return BadRequest(result.FailureReason);
 
-            return Created($"/sales-pipelines/{command.SaleId}/agreement", new {});
+            return Created($"/agreements/{result.Data.Id}", result.Data);
         }
     }
 }
